@@ -68,13 +68,13 @@ async def on_member_join(member):
 
 if __name__ == '__main__':
     import sys
-    default_token = 'moogle'
-    token_name = default_token if len(sys.argv) <= 1 else sys.argv[1]
+    DEFAULT_TOKEN = 'moogle'
+    token_name = DEFAULT_TOKEN if len(sys.argv) <= 1 else sys.argv[1]
     if token_name != 'moogle' and token_name != 'chocobo' and token_name != 'lamia':
         print("/!\\ You did not input a valid argument for the script. The first argument represents the token name.")
         print("/!\\ Valid token names are : moogle, lamia, chocobo.")
-        print("/!\\ Defaulting to token: {}.".format(default_token))
-        token_name = default_token
+        print("/!\\ Defaulting to token: {}.".format(DEFAULT_TOKEN))
+        token_name = DEFAULT_TOKEN
 
     # The following variable has a dual use :
     # - first for the file name,
