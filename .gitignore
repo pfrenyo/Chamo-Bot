@@ -2,4 +2,4 @@
 data/*
 
 # exception to the rule, so as to keep the 'data' folder only
-!data/.gitkeep
+!data/keys/README.md
