@@ -4,17 +4,10 @@ import random
 
 BOOGALOO_URL = 'https://i.imgur.com/O9QjSPT.png'
 
+
 class Fun(commands.Cog):
     def __init__(self, client):
         self.client = client
-
-    @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        await message.channel.send('Message deleted by the NSA.')
-
-    @commands.command()
-    async def ping(self, context):
-        await context.send('Pong!')
 
     @commands.command(name='tellme',
                 description="Answers a yes/no question with divine knowledge from God himself. "
