@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9feb7664-17db-4d64-84fe-83997a609977" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/run_bot.py" afterDir="false" />
-    </list>
+    <list default="true" id="9feb7664-17db-4d64-84fe-83997a609977" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +15,18 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cogs/admin.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cogs/welcome.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cogs/fun.py">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
@@ -39,6 +47,8 @@
       <list>
         <option value="$PROJECT_DIR$/run_bot.py" />
         <option value="$PROJECT_DIR$/cogs/admin.py" />
+        <option value="$PROJECT_DIR$/cogs/welcome.py" />
+        <option value="$PROJECT_DIR$/cogs/fun.py" />
       </list>
     </option>
   </component>
@@ -52,7 +62,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="276" />
     <option name="y" value="22" />
     <option name="width" value="1360" />
@@ -70,11 +80,6 @@
               <item name="Chamo-Bots" type="b2602c69:ProjectViewProjectNode" />
               <item name="Chamo-Bots" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Chamo-Bots" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Chamo-Bots" type="462c0819:PsiDirectoryNode" />
-              <item name="cogs" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -83,6 +88,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -110,15 +116,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1559705573284</updated>
-      <workItem from="1559705575202" duration="456000" />
+      <workItem from="1559705575202" duration="1210000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="456000" />
+    <option name="totallyTimeSpent" value="1210000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1044" extended-state="6" />
+    <frame x="0" y="0" width="1920" height="1044" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
@@ -152,6 +158,12 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/cogs/admin.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cogs/welcome.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cogs/fun.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>

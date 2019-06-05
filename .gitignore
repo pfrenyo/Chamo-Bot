@@ -1,5 +1,6 @@
-# exclude data
+# To be excluded
+.idea/
 data/*
 
-# exception to the rule, so as to keep the 'data' folder only
+# Exceptions to the rule, so as to keep some folders to indicate the required project structure.
 !data/keys/README.md
