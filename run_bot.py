@@ -19,7 +19,7 @@ os.chdir(dir_name)
 # - then for the content, which is the admin's id itself.
 ADMIN_ID = "data/keys/admin.key"
 with open(ADMIN_ID, 'r') as f:
-    admin_id = f.readline()
+    ADMIN_ID = f.readline()
 BOT_PREFIX = (".", "?", "!")
 COGS_FOLDER = 'cogs'
 EXTENSIONS = [filename[:len(filename)-3] for filename in os.listdir(COGS_FOLDER) if filename[0] != '_']  # We cut the '.py' from every filename.
@@ -34,6 +34,8 @@ with open(WELCOME_PICTURE, 'rb') as picture:
 client = commands.Bot(command_prefix=BOT_PREFIX)
 
 client.ADMIN_ID = ADMIN_ID
+client.COGS_FOLDER = COGS_FOLDER
+client.EXTENSIONS = EXTENSIONS
 client.WELCOME_PICTURE = WELCOME_PICTURE
 
 @client.event
@@ -87,6 +89,6 @@ if __name__ == '__main__':
         try:
             client.load_extension(COGS_FOLDER+'.'+extension)
         except Exception as error:
-            print('{} canot be loaded. [{}]'.format(extension, error))
+            print('Extension \'{}\' canot be loaded. [Reason: {}]'.format(extension, error))
 
     client.run(TOKEN)

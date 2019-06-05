@@ -69,6 +69,10 @@ class Fun(commands.Cog):
     async def boogaloo_url(self, context):
         await context.send(BOOGALOO_URL)  # Same as context.channel.send
 
+    @commands.command()
+    async def joke(self, context):
+        await context.send("This is a WIP. This will be a command telling a joke from a joke database.")
+
 
 def setup(client):
     client.add_cog(Fun(client))
