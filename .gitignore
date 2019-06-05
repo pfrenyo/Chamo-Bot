@@ -1,6 +1,7 @@
 # To be excluded
 .idea/
 data/keys/*
+*__pycache__*
 
 # Exceptions to the rule, so as to keep some folders to indicate the required project structure.
 !data/keys/README.md
