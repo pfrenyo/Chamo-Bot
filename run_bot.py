@@ -20,11 +20,9 @@ os.chdir(dir_name)
 ADMIN_ID = "data/keys/admin.key"
 with open(ADMIN_ID, 'r') as f:
     admin_id = f.readline()
-
 BOT_PREFIX = (".", "?", "!")
-
-EXTENSIONS = [filename[:len(filename)-3] for filename in os.listdir('cogs')]  # We cut the '.py' from every filename.
-
+COGS_FOLDER = 'cogs'
+EXTENSIONS = [filename[:len(filename)-3] for filename in os.listdir(COGS_FOLDER) if filename[0] != '_']  # We cut the '.py' from every filename.
 WELCOME_PICTURE = "data/img/Chamo2.png"
 with open(WELCOME_PICTURE, 'rb') as picture:
     WELCOME_PICTURE = discord.File(picture)
@@ -35,6 +33,8 @@ with open(WELCOME_PICTURE, 'rb') as picture:
 
 client = commands.Bot(command_prefix=BOT_PREFIX)
 
+client.ADMIN_ID = ADMIN_ID
+client.WELCOME_PICTURE = WELCOME_PICTURE
 
 @client.event
 async def on_ready():
@@ -82,5 +82,11 @@ if __name__ == '__main__':
     TOKEN = "data/keys/{}.key".format(token_name)
     with open(TOKEN, 'r') as f:
         TOKEN = f.readline()
+
+    for extension in EXTENSIONS:
+        try:
+            client.load_extension(COGS_FOLDER+'.'+extension)
+        except Exception as error:
+            print('{} canot be loaded. [{}]'.format(extension, error))
 
     client.run(TOKEN)
