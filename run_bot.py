@@ -21,6 +21,7 @@ ADMIN_ID = "data/keys/admin.key"
 with open(ADMIN_ID, 'r') as f:
     ADMIN_ID = f.readline()
 BOT_PREFIX = (".", "?", "!")
+DEFAULT_TOKEN_NAME = 'moogle'
 VALID_TOKEN_NAMES = ['moogle', 'chocobo', 'lamia', 'whitemage']
 WELCOME_PICTURE = "data/img/Chamo2.png"
 with open(WELCOME_PICTURE, 'rb') as picture:
@@ -30,21 +31,6 @@ with open(WELCOME_PICTURE, 'rb') as picture:
 #    Setting up our little bot    #
 ###################################
 
-client = commands.Bot(command_prefix=BOT_PREFIX)
-
-client.ADMIN_ID = ADMIN_ID
-# client.COGS_FOLDER is set in the main function.
-# client.CURRENT_BOT is set in the main function.
-# client.EXTENSIONS is set in the main function.
-client.WELCOME_PICTURE = WELCOME_PICTURE
-
-@client.event
-async def on_ready():
-    await client.change_presence(activity=discord.Game(name="FF Tactics"))
-    print("---------------------------------------------------------------")
-    print("Bot logged in as >>> {0.name} <<< (id : {0.id})".format(client.user))
-    print("---------------------------------------------------------------")
-
 
 ########################################
 # In case our script gets called as is #
@@ -53,16 +39,14 @@ async def on_ready():
 if __name__ == '__main__':
     import sys
     COGS_FOLDER = 'cogs'
-    DEFAULT_TOKEN = 'moogle'
-    token_name = DEFAULT_TOKEN if len(sys.argv) <= 1 else sys.argv[1]
+    token_name = DEFAULT_TOKEN_NAME if len(sys.argv) <= 1 else sys.argv[1]
     if token_name not in VALID_TOKEN_NAMES:
         print("/!\\ You did not input a valid argument for the script. The first argument represents the token name.")
         print("/!\\ Valid token names are : '", end='')
         print(*VALID_TOKEN_NAMES, sep='\', \'', end='')
         print("'.")
-        print("/!\\ Defaulting to token: {}.".format(DEFAULT_TOKEN))
-        token_name = DEFAULT_TOKEN
-
+        print("/!\\ Defaulting to token: {}.".format(DEFAULT_TOKEN_NAME))
+        token_name = DEFAULT_TOKEN_NAME
 
     # The following variable has a dual use :
     # - first for the file name,
@@ -72,14 +56,33 @@ if __name__ == '__main__':
         TOKEN = f.readline()
 
     if token_name == 'whitemage':
+        BOT_PREFIX = "?"
         EXTENSIONS = [filename[:len(filename) - 3] for filename in os.listdir(COGS_FOLDER+"/WhiteMage") if
                   filename[0] != '_']  # We cut the '.py' from every filename, and don't take scripts starting with '_'.
         COGS_FOLDER = COGS_FOLDER+'.WhiteMage.'
     else:
+        BOT_PREFIX = (".", "!")
         EXTENSIONS = [filename[:len(filename) - 3] for filename in os.listdir(COGS_FOLDER + "/FF-Bots") if
                       filename[0] != '_']  # We cut the '.py' from every filename,and don't take scripts starting w/ '_'
         COGS_FOLDER = COGS_FOLDER+'.FF-Bots.'
 
+    client = commands.Bot(command_prefix=BOT_PREFIX)
+
+    client.ADMIN_ID = ADMIN_ID
+    # client.COGS_FOLDER is set in the main function.
+    # client.CURRENT_BOT is set in the main function.
+    # client.EXTENSIONS is set in the main function.
+    client.WELCOME_PICTURE = WELCOME_PICTURE
+
+
+    @client.event
+    async def on_ready():
+        print("---------------------------------------------------------------")
+        print("Bot logged in as >>> {0.name} <<< (id : {0.id})".format(client.user))
+        print("---------------------------------------------------------------")
+
+
+    client.BOT_PREFIX = BOT_PREFIX
     client.COGS_FOLDER = COGS_FOLDER
     client.CURRENT_BOT = token_name
     client.EXTENSIONS = EXTENSIONS
