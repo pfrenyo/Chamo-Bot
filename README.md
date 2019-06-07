@@ -1,4 +1,4 @@
-# Chamo-Bot
+# Chamo-Bots
 
 [<img src="https://img.shields.io/badge/Discord.py-1.2.0a-ff69b4.svg">](https://github.com/Rapptz/discord.py)
 
