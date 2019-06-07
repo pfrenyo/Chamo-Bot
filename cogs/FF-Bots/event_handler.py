@@ -2,9 +2,13 @@ import discord
 from discord.ext import commands
 
 
-class Events(commands.Cog):
+# This class handles all events except 2 :
+# - on_ready for initial bot connection (giving internal info only), handled by the main script (run_bot.py)
+# - on_member_join, handled by welcome.py
+class EventHandler(commands.Cog):
     def __init__(self, client):
         self.client = client
+
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
@@ -12,4 +16,4 @@ class Events(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(Events(client))
+    client.add_cog(EventHandler(client))

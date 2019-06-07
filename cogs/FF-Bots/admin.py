@@ -14,7 +14,7 @@ class Admin(commands.Cog):
     async def load(self, context, extension):
         if _is_admin(self, context):
             try:
-                self.client.load_extension(self.client.COGS_FOLDER+'.'+extension)
+                self.client.load_extension(self.client.COGS_FOLDER+extension)
                 print('Successfully loaded extension \'{}\''.format(extension))
             except Exception as error:
                 print('Extension \'{}\' cannot be loaded. [Reason: {}]'.format(extension, error))
@@ -26,7 +26,7 @@ class Admin(commands.Cog):
         if _is_admin(self, context):
             if extension != "admin" and extension != "debug":
                 try:
-                    self.client.unload_extension(self.client.COGS_FOLDER+'.'+extension)
+                    self.client.unload_extension(self.client.COGS_FOLDER+extension)
                     print('Successfully unloaded extension \'{}\''.format(extension))
                 except Exception as error:
                     print('Extension \'{}\' cannot be unloaded. [Reason: {}]'.format(extension, error))
