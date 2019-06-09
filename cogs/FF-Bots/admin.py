@@ -1,15 +1,27 @@
-import discord
 from discord.ext import commands
 
 
+#######################################################################################################################
+#                                             Helper functions                                                        #
+#######################################################################################################################
+
+# Function checking whether or not a user is the administrator of the bot.
+#
+# @pre: the Admin object, the command/message's context
+# @post: boolean value indicating whether or not the sender is admin
 def _is_admin(self, context):  # Can be done with a sexy decorator later: TO BE IMPLEMENTED!!!
     return int(context.author.id) == int(self.client.ADMIN_ID)
 
 
+#######################################################################################################################
+#                                          ---  'Admin' cog  ---                                                      #
+#                                   Cog containing admin-only commands                                                #
+#######################################################################################################################
 class Admin(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    # Command to load a cog (also called 'extension' or 'module')
     @commands.command()
     async def load(self, context, extension):
         if _is_admin(self, context):
@@ -21,6 +33,7 @@ class Admin(commands.Cog):
         else:
             await context.send('Command \'load\' can only be used by my administrator')
 
+    # Command to unload a cog (also called 'extension' or 'module')
     @commands.command()
     async def unload(self, context, extension):
         if _is_admin(self, context):

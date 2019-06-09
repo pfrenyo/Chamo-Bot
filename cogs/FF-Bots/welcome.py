@@ -2,14 +2,19 @@ import discord
 from discord.ext import commands
 
 
+#######################################################################################################################
+#                                          ---  'Welcome' cog  ---                                                    #
+#                                  Cog handling events requiring greetings                                            #
+#######################################################################################################################
 class Welcome(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    # Event handler for new member join
     @commands.Cog.listener()
     async def on_member_join(self, member):
         guild = member.guild
-        if guild.system_channel is not None:
+        if guild.system_channel is not None:  # guild.system_channel is the channel indicated as default for new members
             moogle_emoji = discord.utils.get(guild.emojis, name='moogle')
             message = "{0} {0} {0} {0} :flag_fr: Mon cher {1.mention}, bienvenue à la {2.name}!! " \
                       "Pour feter ton arrivée, voici la magnifique jacquette de la Secte, rien que pour toi! " \
