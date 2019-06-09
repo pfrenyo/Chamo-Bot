@@ -2,6 +2,7 @@
 .idea/
 data/keys/*
 *__pycache__*
+asynctest.py
 
 # Exceptions to the rule, so as to keep some folders to indicate the required project structure.
 !data/keys/README.md
