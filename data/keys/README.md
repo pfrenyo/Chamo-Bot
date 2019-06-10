@@ -1,5 +1,5 @@
 # HOW TO USE
-This folder normally contains 5 files:
+This folder normally contains 5 necessary files:
 admin.key, chocobo.key, lamia.key, moogle.key and whitemage.key
 
 - admin.key contains the id of the administrator of the bot. The functions in the 'admin.py' cog will only work with said user id.

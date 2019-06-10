@@ -1,5 +1,4 @@
 import os
-import discord
 from discord.ext import commands
 
 #######################################################################################################################
@@ -20,14 +19,6 @@ if __name__ == '__main__':
     #                                         Setting up our constants                                                #
     ###################################################################################################################
 
-    # The following variable has a dual use :
-    # - first for the file name,
-    # - then for the content, which is the admin's id itself.
-    # These type of variables will have a '# Dual use variable' comment before they're used.
-    ADMIN_ID = "data/keys/admin.key"
-    with open(ADMIN_ID, 'r') as f:
-        ADMIN_ID = f.readline()
-
     BOT_PREFIX = (".", "?", "!")
 
     # Dual use variable : will first only be the cogs folder, then become the exact folder for calling extensions in
@@ -36,10 +27,7 @@ if __name__ == '__main__':
     DEFAULT_TOKEN_NAME = 'moogle'
     VALID_TOKEN_NAMES = ['moogle', 'chocobo', 'lamia', 'whitemage']
 
-    # Dual use variable: file name, then picture file itself.
     WELCOME_PICTURE = "data/img/Chamo2.png"
-    with open(WELCOME_PICTURE, 'rb') as picture:
-        WELCOME_PICTURE = discord.File(picture)
 
     ###################################################################################################################
     #                                          Fetching our tokens                                                    #
@@ -88,7 +76,6 @@ if __name__ == '__main__':
     client = commands.Bot(command_prefix=BOT_PREFIX)
 
     # Setting up global variables (accessible to all cogs/extensions)
-    client.ADMIN_ID = ADMIN_ID
     client.BOT_PREFIX = BOT_PREFIX
     client.COGS_FOLDER = COGS_FOLDER
     client.CURRENT_BOT = token_name

@@ -1,6 +1,8 @@
+from discord import File as discordFile
 from discord.ext import commands
 import random
 BOOGALOO_URL = 'https://i.imgur.com/O9QjSPT.png'
+WHAT_LALALAND = 'https://www.youtube.com/watch?v=J5sZadTEWTc'
 
 
 #######################################################################################################################
@@ -59,8 +61,9 @@ class Fun(commands.Cog):
     # Sends the user the game box of Chamo 2 (by uploading it to discord)
     @commands.command()
     async def boogaloo(self, context):
-        await context.channel.send(content='\"Really makes you FEEL like a camel\" - Machinima',
-                                   file=self.client.WELCOME_PICTURE)
+        with open(self.client.WELCOME_PICTURE, 'rb') as picture:
+            await context.channel.send(content='\"Really makes you FEEL like a camel\" - Machinima',
+                                       file=discordFile(picture))
 
     # Sends the user the game box of Chamo 2 (by sending a url)
     @commands.command()
@@ -71,6 +74,12 @@ class Fun(commands.Cog):
     @commands.command()
     async def joke(self, context):
         await context.send("This is a WIP. This will be a command telling a joke from a joke database.")
+
+    # Reaction video: WHAT?! NO! from La La Land.
+    @commands.command(name='what',
+                      aliases=['what?', 'what!', 'what?!', 'what!?', 'whatno'])
+    async def what(self, context):
+        await context.send(WHAT_LALALAND)
 
 
 def setup(client):

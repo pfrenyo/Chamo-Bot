@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+from utils import is_admin
+from utils import fetch_admin
 import json
 import time
 import asyncio
@@ -72,18 +74,6 @@ EXO_100 = "some hand exercises.\n" \
 
 
 #######################################################################################################################
-#                                             Helper functions                                                        #
-#######################################################################################################################
-
-# Function checking whether or not a user is the administrator of the bot.
-#
-# @pre: the Whitemage object, the command/message's context
-# @post: boolean value indicating whether or not the sender is admin
-def _is_admin(self, context):  # Can be done with a sexy decorator later: TO BE IMPLEMENTED!!!
-    return int(context.author.id) == int(self.client.ADMIN_ID)
-
-
-#######################################################################################################################
 #                                         ---  'Whitemage' cog  ---                                                   #
 #                             Main (and only) cog for our Nurse bot, WhiteMage                                        #
 #######################################################################################################################
@@ -148,7 +138,7 @@ class WhiteMage(commands.Cog):
                               "Soyez gentil avec moi.\n" \
                               'PS : Si vous avez des idées d\'améliorations pour ce bot, ' \
                               'veuillez les envoyer à mon' \
-                              'créateur, {0.mention}.'.format(await self.client.fetch_user(self.client.ADMIN_ID))
+                              'créateur, {0.mention}.'.format(await fetch_admin(self.client))
 
         # Greeting new guilds Whitemage has been introduced in, and informing already known guilds that an update
         # has been done (the update message is limited to once every 24 hours to avoid spam when mass-updating).
@@ -430,18 +420,18 @@ class WhiteMage(commands.Cog):
                       hidden=True,
                       aliases=['admincommands'])
     async def adminhelp(self, context):
-        if _is_admin(self, context):
+        if is_admin(context):
             admin_cmds = ['whowrist']
-            admin = await self.client.fetch_user(self.client.ADMIN_ID)
+            admin = await fetch_admin(self.client)
             await admin.send("Current admin commands on whitemage are:\n" + ';'.join(admin_cmds))
 
     # This command informs you on who is currently registered for wrist exercise pings, i.e. which user is in self.wrist
     @commands.command(name='whowrist',
                       hidden=True)
     async def whowrist(self, context):
-        if _is_admin(self, context):
+        if is_admin(context):
             # Fetch user object of admin (to allow a DM/PM)
-            admin = await self.client.fetch_user(self.client.ADMIN_ID)
+            admin = await fetch_admin(self.client)
 
             # Note : fetching users and using them (like with user.mention) must be done separately, or else it fails.
             users = [await self.client.fetch_user(userid) for userid in self.wrist]

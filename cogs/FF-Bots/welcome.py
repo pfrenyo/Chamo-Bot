@@ -1,4 +1,5 @@
 import discord
+from discord import File as discordFile
 from discord.ext import commands
 
 
@@ -23,7 +24,8 @@ class Welcome(commands.Cog):
                       "Let us celebrate your arrival with this magnificent game box representing our Sect! " \
                       ":flag_us: {0} {0} {0} {0}\n" \
                 .format(moogle_emoji, member, guild)
-            await guild.system_channel.send(content=message, file=self.client.WELCOME_PICTURE)
+            with open(self.client.WELCOME_PICTURE, 'rb') as picture:
+                await guild.system_channel.send(content=message, file=discordFile(picture))
 
 
 def setup(client):

@@ -1,6 +1,8 @@
 # To be excluded
 .idea/
 data/keys/*
+data/info/moochreplies
+cogs/FF-Bots/mooch.py
 *__pycache__*
 
 # Exceptions to the rule, so as to keep some folders to indicate the required project structure.
