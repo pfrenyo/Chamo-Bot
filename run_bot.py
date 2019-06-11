@@ -57,7 +57,7 @@ if __name__ == '__main__':
     # Separating whitemage and the other tokens, using two different cog folders.
     # WhiteMage replies to commands starting with '?', while Moogle, Lamia and Chocobo reply to '.' and '!' commands.
     if token_name == 'whitemage':
-        BOT_PREFIX = "?"
+        BOT_PREFIX = ("?",)
         EXTENSIONS = [filename[:len(filename) - 3] for filename in os.listdir(COGS_FOLDER+"/WhiteMage") if
                   filename[0] != '_']  # We cut the '.py' from every filename, and don't take scripts starting with '_'.
         COGS_FOLDER = COGS_FOLDER+'.WhiteMage.'
