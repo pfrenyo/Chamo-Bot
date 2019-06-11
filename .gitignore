@@ -4,6 +4,7 @@ data/keys/*
 data/info/moochreplies
 cogs/FF-Bots/mooch.py
 *__pycache__*
+venv/
 
 # Exceptions to the rule, so as to keep some folders to indicate the required project structure.
 !data/keys/README.md
