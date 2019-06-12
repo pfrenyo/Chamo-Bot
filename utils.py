@@ -21,7 +21,7 @@ def is_admin(context):  # Can be done with a sexy decorator later: TO BE IMPLEME
 
 # Function fetching the discord user object of the admin of the server.
 #
-# @pre:
+# @pre: a bot's Client object
 # @post: discord.User object of the administrator
 async def fetch_admin(client):
     return await client.fetch_user(ADMIN_ID)

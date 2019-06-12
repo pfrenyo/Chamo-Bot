@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     if token_name not in VALID_TOKEN_NAMES:
         print("/!\\ You did not input a valid argument for the script. The first argument represents the token name.")
-        print("/!\\ Valid token names are : '", end='')
+        print("/!\\ Valid token names are : \'", end='')
         print(*VALID_TOKEN_NAMES, sep='\', \'', end='')
         print("'.")
         print("/!\\ Defaulting to token: {}.".format(DEFAULT_TOKEN_NAME))
