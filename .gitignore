@@ -1,7 +1,7 @@
 # To be excluded
 .idea/
 data/keys/*
-data/info/moochreplies
+data/info/*
 cogs/FF-Bots/mooch.py
 *__pycache__*
 venv/
