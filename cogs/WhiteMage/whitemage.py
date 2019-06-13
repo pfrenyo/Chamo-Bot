@@ -86,6 +86,7 @@ class WhiteMage(commands.Cog):
         try:
             with open(WHITEMAGE_DATA_FILE, 'r') as f:
                 self.info = json.load(f)
+                print("> Successfully loaded data from {}".format(WHITEMAGE_DATA_FILE))
         except IOError:
             print("/!\\ WHITEMAGE DATA (INFO) NOT FOUND AT {}, DEFAULTING TO BLANK VALUES!".format(WHITEMAGE_DATA_FILE))
             self.info = {

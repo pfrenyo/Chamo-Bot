@@ -1,5 +1,6 @@
 from discord.ext import commands
 import requests
+import datetime
 
 
 #######################################################################################################################
@@ -24,6 +25,17 @@ class Misc(commands.Cog):
         await context.send(
             "Hey there {} AKA {}, your guild is {}.".format(context.message.author, context.message.author.mention,
                                                             context.message.author.guild))
+
+    @commands.command(name='epoch2dt')
+    async def epoch2dt(self, context, epoch):
+        dt = datetime.datetime.fromtimestamp(float(epoch))
+        await context.send("Epoch *{}* is equivalent to datetime *{}*.".format(epoch, dt))
+
+    @commands.command(name='dt2epoch')
+    async def dt2epoch(self, context, date, time):
+        fused = date + " " + time
+        dt = datetime.datetime.strptime(fused, '%Y-%m-%d %H:%M:%S')
+        await context.send("Datetime *{}* is equivalent to epoch *{}*.".format(fused, dt.timestamp()))
 
 
 def setup(client):

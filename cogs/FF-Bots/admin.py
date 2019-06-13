@@ -1,5 +1,6 @@
 from discord.ext import commands
 from utils import is_admin
+from utils import fetch_admin
 
 
 #######################################################################################################################
@@ -36,6 +37,16 @@ class Admin(commands.Cog):
                 print('Access denied: You cannot EVER unload extensions \'admin\' or \'debug\'.')
         else:
             await context.send('Command \'unload\' can only be used by my administrator')
+
+    @commands.command(nam='adminhelp',
+                      hidden=True,
+                      aliases=['admincommands'])
+    async def adminhelp(self, context):
+        if is_admin(context):
+            admin_cmds = ['mooch', 'mooch_options', 'mooch_message', 'forcedelanime_iamsure', 'dumprssinfo']
+            # From mooch and rss_manager so far
+            admin = await fetch_admin(self.client)
+            await admin.send("Current admin commands on admin are:\n" + ';'.join(admin_cmds))
 
 
 def setup(client):
