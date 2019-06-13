@@ -142,7 +142,7 @@ class RSSManager(commands.Cog):
                         for channel_id in self.rssinfo[HORRIBLE720][anime_name]['channels']:
                             channel = await self.client.fetch_channel(channel_id)
                             await channel.send(embed=embed)
-        
+
         await self.save_rssmanager_data()
         await asyncio.sleep(RSS_SLEEPTIME)
         await asyncio.ensure_future(self.horriblesubs_720p_loop())
