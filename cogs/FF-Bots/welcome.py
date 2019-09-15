@@ -18,11 +18,9 @@ class Welcome(commands.Cog):
         if guild.system_channel is not None:  # guild.system_channel is the channel indicated as default for new members
             moogle_emoji = discord.utils.get(guild.emojis, name='moogle')
             message = "{0} {0} {0} {0} :flag_fr: Mon cher {1.mention}, bienvenue à la {2.name}!! " \
-                      "Pour feter ton arrivée, voici la magnifique jacquette de la Secte, rien que pour toi! " \
-                      ":flag_fr: {0} {0} {0} {0}\n" \
+                      "Pour feter ton arrivée, voici la magnifique jaquette de la Secte, rien que pour toi!\n" \
                       "{0} {0} {0} {0} :flag_us: My dear {1.mention}, welcome to {2.name}!! " \
-                      "Let us celebrate your arrival with this magnificent game box representing our Sect! " \
-                      ":flag_us: {0} {0} {0} {0}\n" \
+                      "Let us celebrate your arrival with this magnificent game box representing our Sect!\n" \
                 .format(moogle_emoji, member, guild)
             with open(self.client.WELCOME_PICTURE, 'rb') as picture:
                 await guild.system_channel.send(content=message, file=discordFile(picture))

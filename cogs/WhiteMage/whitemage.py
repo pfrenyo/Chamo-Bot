@@ -141,23 +141,31 @@ class WhiteMage(commands.Cog):
                               'veuillez les envoyer à mon' \
                               'créateur, {0.mention}.'.format(await fetch_admin(self.client))
 
-        # Greeting new guilds Whitemage has been introduced in, and informing already known guilds that an update
-        # has been done (the update message is limited to once every 24 hours to avoid spam when mass-updating).
-        # Note : 'Discord guild' is a synonym for a 'Discord server'.
-        #         We chose to keep 'guild' for consistency with the API.
-        for guild in self.client.guilds:
-            # Introducing itself to a new guild
-            if guild.id not in self.info.setdefault('known_guilds', []):
-                self.info['known_guilds'].append(guild.id)
-                await guild.system_channel.send(whitemage_intro_msg)
+        # Function removed entirely. May come back later on, but putting it in "on_ready" isn't optimal.
 
-            # Informing known guilds about an update
-            else:
-                if time.time() - self.info.setdefault('latest_update_time', time.time()) > 86401:
-                    # 86400 is the number of seconds in a day.
-                    # This is so the update message only appears once per day at best.
-                    self.info['latest_update_time'] = time.time()
-                    await guild.system_channel.send(WHITEMAGE_UPDATE_MSG)
+        # # Greeting new guilds Whitemage has been introduced in, and informing already known guilds that an update
+        # # has been done (the update message is limited to once every 24 hours to avoid spam when mass-updating).
+        # # Note : 'Discord guild' is a synonym for a 'Discord server'.
+        # #         We chose to keep 'guild' for consistency with the API.
+        # for guild in self.client.guilds:
+        #     # Introducing itself to a new guild
+        #     if guild.id not in self.info.setdefault('known_guilds', []):
+        #         self.info['known_guilds'].append(guild.id)
+        #         await guild.system_channel.send(whitemage_intro_msg)
+        #
+        #     # The following code has been temporarily removed because of Heroku's dumb tendency
+        #     # to reboot every script after 24 hours. This message spammed the server at 24h intervals, so
+        #     # this function had to be removed.
+        #     # Instead, only the admin will get a message (for debugging purposes)
+        #
+        #     # # Informing known guilds about an update
+        #     # else:
+        #     #     if time.time() - self.info.setdefault('latest_update_time', time.time()) > 86401:
+        #     #         # 86400 is the number of seconds in a day.
+        #     #         # This is so the update message only appears once per day at best.
+        #     #         self.info['latest_update_time'] = time.time()
+        #     #         await guild.system_channel.send(WHITEMAGE_UPDATE_MSG)
+
         # Saving new known guilds data
         await self.save_whitemage_data()
 

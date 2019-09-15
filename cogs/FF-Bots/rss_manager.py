@@ -31,6 +31,7 @@ HS_ANIME_SIMILAR_FOUND = "The anime you're trying to add on the watch list doesn
                          "HorribleSubs' 720p RSS feed.\n\n"\
                          "**Did you mean to add any of the following?**\n"\
                          "*>> {}*"
+SHADOWVERSE_CHANNEL = 559401293928464417
 
 
 #######################################################################################################################
@@ -116,6 +117,11 @@ class RSSManager(commands.Cog):
     async def on_ready(self):
         await self.horriblesubs_720p_loop()
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.channel.id == SHADOWVERSE_CHANNEL and message.content[0] in self.client.BOT_PREFIX:
+            pass
+
     # Btw the reason we're working with last_update times instead of episode numbers is because sometimes,
     # episode '0' comes out after a few episodes are already out.
 
@@ -140,8 +146,13 @@ class RSSManager(commands.Cog):
                         episode_number = get_episode_number(entry['title'])
                         embed = create_embed_horriblesubs(anime_name, episode_number, self.rssinfo)
                         for channel_id in self.rssinfo[HORRIBLE720][anime_name]['channels']:
-                            channel = await self.client.fetch_channel(channel_id)
-                            await channel.send(embed=embed)
+                            channel = self.client.get_channel(channel_id)
+                            if channel:
+                                await channel.send(embed=embed)
+                            else:
+                                user = self.client.get_user(channel_id)
+                                if user:
+                                    await user.send(embed=embed)
 
         await self.save_rssmanager_data()
         await asyncio.sleep(RSS_SLEEPTIME)
@@ -161,6 +172,9 @@ class RSSManager(commands.Cog):
         if content.startswith('"') and content.endswith('"'):
             content = content.lstrip('" ').rstrip(' "')
         anime_name = content
+
+        if context.guild is None:
+            cur_channel = context.author.id
 
         if anime_name in self.rssinfo[HORRIBLE720].keys():
             if cur_channel in self.rssinfo[HORRIBLE720][anime_name]['channels']:

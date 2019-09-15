@@ -16,13 +16,18 @@ class EventHandler(commands.Cog):
     # This one changes the status of the bot (visible to everyone) according to its identity (chocobo, lamia or moogle)
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.client.change_presence(activity=discord.Game(name="Xenogears"))
+        # await self.client.change_presence(activity=discord.Game(name="Xenogears"))
+        # The old version was a 'fun' one. Now opting for a more useful one:
+        await self.client.change_presence(activity=discord.Activity(name="use !help",
+                                                                    type=discord.ActivityType['listening']))
 
-    # Event handler for message deletion
-    @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        if message.author != self.client.user:
-            await message.channel.send('Message deleted by the NSA.')
+    # Function retired.
+
+    # # Event handler for message deletion
+    # @commands.Cog.listener()
+    # async def on_message_delete(self, message):
+    #     if message.author != self.client.user:
+    #         await message.channel.send('Message deleted by the NSA.')
 
 
 def setup(client):

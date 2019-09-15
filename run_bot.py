@@ -54,6 +54,16 @@ if __name__ == '__main__':
     #                                    Fetching our extensions (AKA cogs)                                           #
     ###################################################################################################################
 
+
+
+    # im_files = [for f in os.listdir('.') if f[-3:] == 'png']
+    # HEY!
+
+
+
+
+
+
     # Separating whitemage and the other tokens, using two different cog folders.
     # WhiteMage replies to commands starting with '?', while Moogle, Lamia and Chocobo reply to '.' and '!' commands.
     if token_name == 'whitemage':
