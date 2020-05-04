@@ -2,9 +2,9 @@
 #                                             Helper functions                                                        #
 #######################################################################################################################
 
-# The following variable has a dual use :
+# The following variables have a dual use :
 # - first for the file name,
-# - then for the content, which is the admin's id itself.
+# - then for the content, which is the id itself.
 # These type of variables will have a '# Dual use variable' comment before they're used.
 ADMIN_ID = "data/keys/admin.key"
 with open(ADMIN_ID, 'r') as f:

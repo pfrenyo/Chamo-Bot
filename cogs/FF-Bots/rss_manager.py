@@ -102,6 +102,8 @@ class RSSManager(commands.Cog):
             self.rssinfo = {
                 HORRIBLE720: {}
             }
+            with open(RSSMANAGER_DATA_FILE, 'w') as f:
+                json.dump(self.rssinfo, f)
 
     # Save function to keep information about RSSManager between instances
     async def save_rssmanager_data(self):
