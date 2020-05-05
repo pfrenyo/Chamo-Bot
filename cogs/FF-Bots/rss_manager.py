@@ -166,13 +166,13 @@ class RSSManager(commands.Cog):
         cur_channel = context.channel.id
 
         # Parsing command content
-        content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX)+'addanime').lstrip(' ').rstrip(' ')
+        content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX)+'addanime').strip()
         force = False
         if content.endswith('--force'):
             force = True
             content = content.rstrip('--force').rstrip(' ')
         if content.startswith('"') and content.endswith('"'):
-            content = content.lstrip('" ').rstrip(' "')
+            content = content.strip('" ')
         anime_name = content
 
         if context.guild is None:
@@ -239,9 +239,10 @@ class RSSManager(commands.Cog):
 
     @commands.command(name='delanime')
     async def delanime(self, context):
-        content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX) + 'delanime').lstrip(' ').rstrip(' ')
+        # Note: currently throws an Exception if deleting from PM channel (which is None). Fix this!
+        content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX) + 'delanime').strip()
         if content.startswith('"') and content.endswith('"'):
-            content = content.lstrip('" ').rstrip(' "')
+            content = content.strip('" ')
 
         if content in self.rssinfo[HORRIBLE720].keys():
             self.rssinfo[HORRIBLE720][content]['channels'].remove(context.channel.id)
@@ -258,9 +259,9 @@ class RSSManager(commands.Cog):
 
     @commands.command(name='lastupdate')
     async def lastupdate(self, context):
-        content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX)+'lastupdate').lstrip(' ').rstrip(' ').lower()
+        content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX)+'lastupdate').strip().lower()
         if content.startswith('"') and content.endswith('"'):
-            content = content.lstrip('" ').rstrip(' "')
+            content = content.strip('" ')
 
         if content in list(map(lambda x: x.lower(), self.rssinfo[HORRIBLE720].keys())):
             anime_name = get_close_matches(content, self.rssinfo[HORRIBLE720].keys(), n=1)[0]
@@ -282,7 +283,7 @@ class RSSManager(commands.Cog):
     @commands.command()
     async def addthumbnail(self, context, url, *, anime_name):
         if anime_name.startswith('"') and anime_name.endswith('"'):
-            anime_name = anime_name.lstrip('" ').rstrip(' "')
+            anime_name = anime_name.strip('" ')
 
         if anime_name in self.rssinfo[HORRIBLE720].keys():
             url_parsed = urlparse(url)
@@ -299,9 +300,9 @@ class RSSManager(commands.Cog):
     async def forcedelanime_iamsure(self, context):
         if is_admin(context):
             content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX) + 'forcedelanime_iamsure')\
-                                             .lstrip(' ').rstrip(' ')
+                                             .strip()
             if content.startswith('"') and content.endswith('"'):
-                content = content.lstrip('" ').rstrip(' "')
+                content = content.strip('" ')
 
             if content in self.rssinfo[HORRIBLE720].keys():
                 del self.rssinfo[HORRIBLE720][content]
@@ -318,7 +319,7 @@ class RSSManager(commands.Cog):
     async def addurl(self, context, url, *, anime_name):
         if is_admin(context):
             if anime_name.startswith('"') and anime_name.endswith('"'):
-                anime_name = anime_name.lstrip('" ').rstrip(' "')
+                anime_name = anime_name.strip('" ')
 
             if anime_name in self.rssinfo[HORRIBLE720].keys():
                 url_parsed = urlparse(url)

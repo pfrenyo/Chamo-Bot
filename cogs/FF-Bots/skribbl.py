@@ -58,7 +58,7 @@ class Skribbl(commands.Cog):
                                                    f"words for this vocabulary set.")
                         return
                     self.words_per_user[message.author.id][self.on_going_vocabulary] -= 1
-                    self.active_words[self.on_going_vocabulary].add(word.rstrip(" ").lstrip(" "))
+                    self.active_words[self.on_going_vocabulary].add(word.strip())
             await message.channel.send(f"Added the following words: {str(split_msg)}. "
                                        f"{self.words_per_user[message.author.id][self.on_going_vocabulary]} words "
                                        f"left.")
