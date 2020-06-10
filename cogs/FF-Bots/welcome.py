@@ -30,7 +30,7 @@ class Welcome(commands.Cog):
         if int(guild.id) == CHAMO_SERVER_ID and guild.system_channel is not None:  # guild.system_channel is the channel indicated as default for new members
             moogle_emoji = discord.utils.get(guild.emojis, name='moogle')
             message = "{0} {0} {0} {0} :flag_fr: Mon cher {1.mention}, bienvenue à la {2.name}!! " \
-                      "Pour feter ton arrivée, voici la magnifique jaquette de la Secte, rien que pour toi!\n" \
+                      "Pour fêter ton arrivée, voici la magnifique jaquette de la Secte, rien que pour toi!\n" \
                       "{0} {0} {0} {0} :flag_us: My dear {1.mention}, welcome to {2.name}!! " \
                       "Let us celebrate your arrival with this magnificent game box representing our Sect!\n" \
                 .format(moogle_emoji, member, guild)
@@ -41,7 +41,7 @@ class Welcome(commands.Cog):
             await guild.system_channel.send(content=":flag_jp: :flag_be: {0.mention}君、このサーバーへようこそ！ぜひ楽しんでごじゃる！".format(member))
 
         elif guild.system_channel is not None:
-            message = ":flag_fr: Mon cher {0.mention}, bienvenue à {1.name}!" \
+            message = ":flag_fr: Mon cher {0.mention}, bienvenue à {1.name}!\n" \
                       ":flag_us: My dear {0.mention}, welcome to {1.name}!".format(member, guild)
             await guild.system_channel.send(content=message)
 

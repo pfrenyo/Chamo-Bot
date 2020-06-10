@@ -1,5 +1,6 @@
 from discord.ext import commands
 from os.path import dirname, join
+from discord import File as discordFile
 
 SKRIBBL_RESOURCE_LOCATION = join(dirname(dirname(dirname(__file__))), "data", "skribbl")
 
@@ -17,9 +18,15 @@ class Skribbl(commands.Cog):
         self.words_per_user = {}
 
     @commands.command()
-    async def skribbl_start(self, context, words_per_person, *, skribbl_name):
+    async def skribbl_start(self, context, words_per_person, *, skribbl_name=None):
+        if not skribbl_name:
+            await context.channel.send("This is not how we use this function. Use it as follows:\n"
+                                       "!skribbl_start [number_of_words_per_person] [name_of_vocabulary_set]\n\n"
+                                       "*Example: !skribbl_start 8 MyCustomVocabulary*")
+            return
         if not words_per_person.isdigit():
             await context.channel.send("You need to input a number of words per person (i.e., !skribbl_start 5 Test01)")
+            return
         if skribbl_name in self.active_words:
             await context.channel.send(f"There is already a skribbl vocabulary called {skribbl_name} being filled.")
             return
@@ -42,8 +49,7 @@ class Skribbl(commands.Cog):
                 .replace("、", ",")\
                 .replace(";", ",")\
                 .replace("\n", ",")\
-                .replace(".", ",")\
-                .split(",")
+                .split(",")  # Unfortunately, the apostrophe problem isn't from this bot, but from skribbl itself
             for word in split_msg:
                 if word:
                     if message.author.id not in self.words_per_user:
@@ -69,8 +75,9 @@ class Skribbl(commands.Cog):
             await context.channel.send(f"No skribbl vocabulary called {skribbl_name}.")
             return
 
-        output_file_name = join(SKRIBBL_RESOURCE_LOCATION, skribbl_name + ".txt")
-        with open(output_file_name, "w", encoding='utf-8') as f:
+        filename = skribbl_name + ".txt"
+        output_file_path = join(SKRIBBL_RESOURCE_LOCATION, filename)
+        with open(output_file_path, "w", encoding='utf-8') as f:
             f.write(",".join(self.active_words[skribbl_name]))
 
         del self.active_words[skribbl_name]
@@ -83,7 +90,10 @@ class Skribbl(commands.Cog):
         else:
             await context.channel.send(f"FYI, you did not stop the current ongoing vocabulary, "
                                        f"which is '{self.on_going_vocabulary}'.")
-        await context.channel.send(f"Vocabulary dumped in {output_file_name}.")
+        await context.channel.send(f"Vocabulary dumped in {output_file_path}.")
+        with open(output_file_path, "r", encoding='utf-8') as vocabulary_file:
+            await context.channel.send(content="Here's your vocabulary file.",
+                                       file=discordFile(vocabulary_file, filename=filename))
 
 
 def setup(client):
