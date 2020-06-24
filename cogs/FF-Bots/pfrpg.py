@@ -86,78 +86,82 @@ class PathfinderRPG(commands.Cog):
             self.data = json.load(f)
         # A json to store order of messages
         # dictionary of questname to message id
+    
+    #  I really need something to list admin commands
 
     @commands.command(name='pfrpg_set_quest_channel',
                       hidden=True)
     async def pfrpg_set_quest_channel(self, context):
-        if is_admin(context):
-            cur_channel = context.channel.id
-
-            if not cur_channel:
-                await context.send("Private message channel cannot be set as a PFRPG quest channel.")
-                return
-
-            if cur_channel in self.data[ACTIVE_QUEST_CHANNELS]:
-                if self.data[ACTIVE_QUEST_CHANNELS][cur_channel]:
-                    await send_temporary_msg(context, "This channel has already been set up as a PFRPG quest channel.")
-                    await context.message.delete()
-                    return
-                else:
-                    await send_temporary_msg(context, "Previously active PFRPG quest channel found. "
-                                                      "Reviving previous configurations.")
-            else:
-                self.data[QUEST_CHANNELS][cur_channel] = {}
-                await send_temporary_msg(context, "Current channel successfully set as a PFRPG quest channel.")
-
-            self.data[ACTIVE_QUEST_CHANNELS][cur_channel] = True
-            await context.message.delete()
-            await self.save_data()
-
-        else:
+        if not is_admin(context):
             await context.send("Only the adminstrator can use the *pfrpg_set_quest_channel* function")
+            return
+
+        cur_channel = context.channel.id
+
+        if not cur_channel:
+            await context.send("Private message channel cannot be set as a PFRPG quest channel.")
+            return
+
+        if cur_channel in self.data[ACTIVE_QUEST_CHANNELS]:
+            if self.data[ACTIVE_QUEST_CHANNELS][cur_channel]:
+                await send_temporary_msg(context, "This channel has already been set up as a PFRPG quest channel.")
+                await context.message.delete()
+                return
+            else:
+                await send_temporary_msg(context, "Previously active PFRPG quest channel found. "
+                                                  "Reviving previous configurations.")
+        else:
+            self.data[QUEST_CHANNELS][cur_channel] = {}
+            await send_temporary_msg(context, "Current channel successfully set as a PFRPG quest channel.")
+
+        self.data[ACTIVE_QUEST_CHANNELS][cur_channel] = True
+        await context.message.delete()
+        await self.save_data()
 
     @commands.command(name='pfrpg_unset_quest_channel',
                       hidden=True)
     async def pfrpg_unset_quest_channel(self, context):
-        if is_admin(context):
-            cur_channel = context.channel.id
-
-            if cur_channel not in self.data[ACTIVE_QUEST_CHANNELS] or not self.data[ACTIVE_QUEST_CHANNELS][cur_channel]:
-                await send_temporary_msg(context, "Current channel is not an active PFRPG quest channel: "
-                                                  "no need to unset.")
-                await context.message.delete()
-                return
-
-            self.data[ACTIVE_QUEST_CHANNELS][cur_channel] = False
-            await send_temporary_msg(context, "Current channel successfully unset: no longer a PFRPG quest channel.")
-            await context.message.delete()
-            await self.save_data()
-        else:
+        if not is_admin(context):
             await context.send("Only the adminstrator can use the *pfrpg_unset_quest_channel* function")
+            return
+
+        cur_channel = context.channel.id
+
+        if cur_channel not in self.data[ACTIVE_QUEST_CHANNELS] or not self.data[ACTIVE_QUEST_CHANNELS][cur_channel]:
+            await send_temporary_msg(context, "Current channel is not an active PFRPG quest channel: "
+                                              "no need to unset.")
+            await context.message.delete()
+            return
+
+        self.data[ACTIVE_QUEST_CHANNELS][cur_channel] = False
+        await send_temporary_msg(context, "Current channel successfully unset: no longer a PFRPG quest channel.")
+        await context.message.delete()
+        await self.save_data()
 
     @commands.command(name='pfrpg_delete_quest_channel_data_iamsure',
                       hidden=True)
     async def pfrpg_delete_quest_channel_data_iamsure(self, context):
-        if is_admin(context):
-            cur_channel = context.channel.id
-
-            if cur_channel not in self.data[ACTIVE_QUEST_CHANNELS]:
-                await context.send("Why would you want to delete quest channel data of a channel that isn't even one?")
-                return
-
-            del self.data[ACTIVE_QUEST_CHANNELS][cur_channel]
-
-            if cur_channel not in self.data[QUEST_CHANNELS]:
-                await context.send("Weirdly enough, this channel was listed as a PFRPG quest channel "
-                                   "but didn't have quest data.")
-                return
-
-            del self.data[QUEST_CHANNELS][cur_channel]
-
-            await context.send("Current channel's quest data successfully deleted.")
-            await self.save_data()
-        else:
+        if not is_admin(context):
             await context.send("Only the adminstrator can use the *pfrpg_delete_quest_channel_data_iamsure* function")
+            return
+
+        cur_channel = context.channel.id
+
+        if cur_channel not in self.data[ACTIVE_QUEST_CHANNELS]:
+            await context.send("Why would you want to delete quest channel data of a channel that isn't even one?")
+            return
+
+        del self.data[ACTIVE_QUEST_CHANNELS][cur_channel]
+
+        if cur_channel not in self.data[QUEST_CHANNELS]:
+            await context.send("Weirdly enough, this channel was listed as a PFRPG quest channel "
+                               "but didn't have quest data.")
+            return
+
+        del self.data[QUEST_CHANNELS][cur_channel]
+
+        await context.send("Current channel's quest data successfully deleted.")
+        await self.save_data()
 
     @commands.command()
     async def add_quest(self, context):
