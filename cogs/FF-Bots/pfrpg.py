@@ -51,6 +51,8 @@ quest_template = {
     "extra": None
 }
 
+on_going_pattern = {"player_id": "Pattern class object made of Messages or something, expects responses, analyzes input by user to see if it matches"}
+
 
 #######################################################################################################################
 #                                      ---  'Pathfinder RPG' cog  ---                                                 #
