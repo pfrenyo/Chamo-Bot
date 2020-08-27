@@ -65,8 +65,9 @@ class VoiceManager(commands.Cog):
                                "If you want to unset this, use !unset_mutable_channel.")
             return
 
-        await context.send(f"Voice channel '{cur_voice_channel.name}' has been set as a mutable channel. "
-                           "Use !mute to mute all the people in that channel, if you're in it.")
+        await context.send(f"Voice channel '{cur_voice_channel.name}' has been set as a mutable channel.\n"
+                           "Use !mute to mute all the people in that channel, if you're in it.\n"
+                           "Use !unmute to unmute everyone.")
         self.data[MUTABLE_CHANNELS][cur_voice_channel_id] = False
         await self.save_data()
 
