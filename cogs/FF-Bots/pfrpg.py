@@ -75,12 +75,12 @@ class PathfinderRPG(commands.Cog):
             with open(PFRPG_DATA_FILE, 'w') as f:
                 json.dump(self.data, f)
 
-    # Save function to keep information about RSSManager between instances
+    # Save function to keep information about PFRPG between instances
     async def save_data(self):
         with open(PFRPG_DATA_FILE, 'w') as f:
             json.dump(self.data, f)
 
-    # Load function loading up information about previous instances of RSSManager
+    # Load function loading up information about previous instances of PFRPG
     async def load_data(self):
         with open(PFRPG_DATA_FILE, 'r') as f:
             self.data = json.load(f)
