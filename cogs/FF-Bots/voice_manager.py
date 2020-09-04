@@ -3,7 +3,7 @@ from os.path import join
 
 from discord.ext import commands
 
-from utils import is_admin
+from utils import is_bot_admin
 
 VOICE_MANAGER_DATA_FILE = join("data", "info", "voicemanager.json")
 MUTABLE_CHANNELS = "mutable_channels"
@@ -46,10 +46,11 @@ class VoiceManager(commands.Cog):
         with open(VOICE_MANAGER_DATA_FILE, 'r') as f:
             self.data = json.load(f)
 
+    @commands.check
     @commands.command(name='set_mutable_channel',
                       hidden=True)
     async def set_mutable_channel(self, context):
-        if not is_admin(context):
+        if not is_bot_admin(context):
             await context.send("Only the adminstrator can use the *set_mutable_channel* function")
             return
 
@@ -120,8 +121,9 @@ class VoiceManager(commands.Cog):
     @commands.command(name='stfu',
                       hidden=True)
     async def stfu(self, context):
-        if not is_admin(context):
-            await context.send("Only the adminstrator can use the *stfu* function")
+        if not is_bot_admin(context):
+            await context.send("As a mark of blatant power abuse by the creator of this bot, "
+                               "only the creator of the bot can use the *stfu* function")
             return
 
         if not context.author.voice or not context.author.voice.channel:
@@ -140,8 +142,9 @@ class VoiceManager(commands.Cog):
     @commands.command(name='unstfu',
                       hidden=True)
     async def unstfu(self, context):
-        if not is_admin(context):
-            await context.send("Only the adminstrator can use the *unstfu* function")
+        if not is_bot_admin(context):
+            await context.send("As a mark of blatant power abuse by the creator of this bot, "
+                               "only the creator of the bot can use the *unstfu* function")
             return
 
         if not context.author.voice or not context.author.voice.channel:
@@ -159,7 +162,7 @@ class VoiceManager(commands.Cog):
     @commands.command(name='unset_mutable_channel',
                       hidden=True)
     async def unset_mutable_channel(self, context):
-        if not is_admin(context):
+        if not is_bot_admin(context):
             await context.send("Only the adminstrator can use the *unset_mutable_channel* function")
             return
 

@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils import is_admin
+from utils import is_bot_admin
 from utils import fetch_admin
 import json
 import time
@@ -429,7 +429,7 @@ class WhiteMage(commands.Cog):
                       hidden=True,
                       aliases=['admincommands'])
     async def adminhelp(self, context):
-        if is_admin(context):
+        if is_bot_admin(context):
             admin_cmds = ['whowrist']
             admin = await fetch_admin(self.client)
             await admin.send("Current admin commands on whitemage are:\n" + ';'.join(admin_cmds))
@@ -438,7 +438,7 @@ class WhiteMage(commands.Cog):
     @commands.command(name='whowrist',
                       hidden=True)
     async def whowrist(self, context):
-        if is_admin(context):
+        if is_bot_admin(context):
             # Fetch user object of admin (to allow a DM/PM)
             admin = await fetch_admin(self.client)
 

@@ -3,7 +3,7 @@ import discord
 from os.path import join
 from discord.ext import commands
 
-from utils import is_admin, send_temporary_msg
+from utils import is_bot_admin, send_temporary_msg
 
 PFRPG_DATA_FILE = join("data", "info", "pfrpg.json")
 ACTIVE_QUEST_CHANNELS = "active_quest_channels"
@@ -94,7 +94,7 @@ class PathfinderRPG(commands.Cog):
     @commands.command(name='pfrpg_set_quest_channel',
                       hidden=True)
     async def pfrpg_set_quest_channel(self, context):
-        if not is_admin(context):
+        if not is_bot_admin(context):
             await context.send("Only the adminstrator can use the *pfrpg_set_quest_channel* function")
             return
 
@@ -123,7 +123,7 @@ class PathfinderRPG(commands.Cog):
     @commands.command(name='pfrpg_unset_quest_channel',
                       hidden=True)
     async def pfrpg_unset_quest_channel(self, context):
-        if not is_admin(context):
+        if not is_bot_admin(context):
             await context.send("Only the adminstrator can use the *pfrpg_unset_quest_channel* function")
             return
 
@@ -143,7 +143,7 @@ class PathfinderRPG(commands.Cog):
     @commands.command(name='pfrpg_delete_quest_channel_data_iamsure',
                       hidden=True)
     async def pfrpg_delete_quest_channel_data_iamsure(self, context):
-        if not is_admin(context):
+        if not is_bot_admin(context):
             await context.send("Only the adminstrator can use the *pfrpg_delete_quest_channel_data_iamsure* function")
             return
 

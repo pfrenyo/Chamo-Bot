@@ -13,18 +13,20 @@ with open(ADMIN_ID, 'r') as f:
     ADMIN_ID = int(f.readline())
 
 
-# Function checking whether or not a user is the administrator of the bot.
+# DEPRECATED
+# Function checking whether or not a user is the administrator (owner) of the bot.
+# DEPRECATED
 #
 # @pre: the Admin object, the command/message's context
 # @post: boolean value indicating whether or not the sender is admin
-def is_admin(context):  # Can be done with a sexy decorator later: TO BE IMPLEMENTED!!!
+def is_bot_admin(context):  # Can be done with a sexy decorator later: TO BE IMPLEMENTED!!!
     return context.author.id == ADMIN_ID
 
 
 # Function fetching the discord user object of the admin of the server.
 #
 # @pre: a bot's Client object
-# @post: discord.User object of the administrator
+# @post: discord.User object of the administrator (owner)
 async def fetch_admin(client):
     return await client.fetch_user(ADMIN_ID)
 

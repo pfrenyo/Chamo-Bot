@@ -7,7 +7,7 @@ import pprint
 import json
 from difflib import get_close_matches
 from urllib.parse import urlparse
-from utils import is_admin
+from utils import is_bot_admin
 from utils import fetch_admin
 HORRIBLE720 = 'horriblesubs_720p'
 HORRIBLESUBS_720p_URL = "http://www.horriblesubs.info/rss.php?res=720"
@@ -298,7 +298,7 @@ class RSSManager(commands.Cog):
     # Force-delete an entire anime entry, deleting all the channels, the thumbnail, last update time, etc. with it.
     @commands.command(name='forcedelanime_iamsure', hidden=True)
     async def forcedelanime_iamsure(self, context):
-        if is_admin(context):
+        if is_bot_admin(context):
             content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX) + 'forcedelanime_iamsure')\
                                              .strip()
             if content.startswith('"') and content.endswith('"'):
@@ -317,7 +317,7 @@ class RSSManager(commands.Cog):
     # Modify the url basis of an anime.
     @commands.command(name='addurl', hidden=True)
     async def addurl(self, context, url, *, anime_name):
-        if is_admin(context):
+        if is_bot_admin(context):
             if anime_name.startswith('"') and anime_name.endswith('"'):
                 anime_name = anime_name.strip('" ')
 
@@ -333,7 +333,7 @@ class RSSManager(commands.Cog):
     # Dumps self.rssinfo in a pretty print on stdout.
     @commands.command(name='dumprssinfo', hidden=True)
     async def dumprssinfo(self, context):
-        if is_admin(context):
+        if is_bot_admin(context):
             pprint.pprint(self.rssinfo)
 
 

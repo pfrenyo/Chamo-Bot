@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext.commands import Cog
 
 
 #######################################################################################################################
@@ -8,13 +8,13 @@ from discord.ext import commands
 #      - on_ready for initial bot connection (giving internal info only), handled by the main script (run_bot.py)     #
 #      - on_member_join, handled by welcome.py                                                                        #
 #######################################################################################################################
-class EventHandler(commands.Cog):
+class EventHandler(Cog):
     def __init__(self, client):
         self.client = client
 
     # Event handler for boot-up, number 2 (there's also an 'on_ready' in run_bot.py, giving internal info only).
     # This one changes the status of the bot (visible to everyone) according to its identity (chocobo, lamia or moogle)
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_ready(self):
         # await self.client.change_presence(activity=discord.Game(name="Xenogears"))
         # The old version was a 'fun' one. Now opting for a more useful one:

@@ -1,5 +1,5 @@
 from discord import File as discordFile
-from discord.ext import commands
+from discord.ext.commands import Cog, command
 import random
 BOOGALOO_URL = 'https://i.imgur.com/O9QjSPT.png'
 WHAT_LALALAND = 'https://www.youtube.com/watch?v=J5sZadTEWTc'
@@ -9,16 +9,16 @@ WHAT_LALALAND = 'https://www.youtube.com/watch?v=J5sZadTEWTc'
 #                                           ---  'Fun' cog  ---                                                       #
 #                               Cog containing several fun (and useless) functions                                    #
 #######################################################################################################################
-class Fun(commands.Cog):
+class Fun(Cog):
     def __init__(self, client):
         self.client = client
 
     # An "eight ball" function, replying to a yes/no question.
-    @commands.command(name='tellme',
-                      description="Answers a yes/no question with divine knowledge from God himself. \n"
-                                  "The reply is irrefutable",
-                      brief="Yes/no question answered with absolute truth.",
-                      aliases=['tell me', 'Tellme', 'Tell me'])
+    @command(name='tellme',
+             description="Answers a yes/no question with divine knowledge from God himself. \n"
+                         "The reply is irrefutable",
+             brief="Yes/no question answered with absolute truth.",
+             aliases=['tell me', 'Tellme', 'Tell me'])
     async def tell_me(self, context):
         possible_responses = [
             'That is a resounding no',
@@ -59,25 +59,25 @@ class Fun(commands.Cog):
                                           context.message.author.mention))
 
     # Sends the user the game box of Chamo 2 (by uploading it to discord)
-    @commands.command()
+    @command()
     async def boogaloo(self, context):
         with open(self.client.WELCOME_PICTURE, 'rb') as picture:
             await context.channel.send(content='\"Really makes you FEEL like a camel\" - Machinima',
                                        file=discordFile(picture))
 
     # Sends the user the game box of Chamo 2 (by sending a url)
-    @commands.command()
+    @command()
     async def boogaloo_url(self, context):
         await context.send(BOOGALOO_URL)  # Same as context.channel.send
 
     # Tells a joke from a joke database
-    @commands.command()
+    @command()
     async def joke(self, context):
         await context.send("This is a WIP. This will be a command telling a joke from a joke database.")
 
     # Reaction video: WHAT?! NO! from La La Land.
-    @commands.command(name='what',
-                      aliases=['what?', 'what!', 'what?!', 'what!?', 'whatno'])
+    @command(name='what',
+             aliases=['what?', 'what!', 'what?!', 'what!?', 'whatno'])
     async def what(self, context):
         await context.send(WHAT_LALALAND)
 
