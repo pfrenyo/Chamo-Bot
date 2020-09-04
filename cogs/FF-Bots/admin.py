@@ -1,3 +1,7 @@
+import json
+from os import listdir
+from os.path import dirname, join
+
 from discord.ext import commands
 from utils import is_admin
 from utils import fetch_admin
@@ -43,10 +47,23 @@ class Admin(commands.Cog):
                       aliases=['admincommands'])
     async def adminhelp(self, context):
         if is_admin(context):
-            admin_cmds = ['mooch', 'mooch_options', 'mooch_message', 'forcedelanime_iamsure', 'dumprssinfo']
+            admin_commands = {"admin.py": ["adminhelp"]}
+            cogs_directory = dirname(__file__)  # getcwd()
+            for cog_filename in filter(lambda z: z != "admin.py", listdir(cogs_directory)):
+                with open(join(cogs_directory, cog_filename)) as f:
+                    cog_code = f.read()
+                    cog_code = cog_code.split("hidden=True")
+                    if len(cog_code) == 1:
+                        continue
+                    cog_code = cog_code[1:]
+                    for command in cog_code:
+                        command = command.split("async def ")[1]
+                        command = command.split("(self")[0]
+                        admin_commands.setdefault(cog_filename, []).append(command)
+
             # From mooch and rss_manager so far
             admin = await fetch_admin(self.client)
-            await admin.send("Current admin commands on admin are:\n" + ';'.join(admin_cmds))
+            await admin.send("Current admin commands on admin are:\n```{}```".format(json.dumps(admin_commands, indent=4)))
 
 
 def setup(client):
