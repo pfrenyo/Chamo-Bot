@@ -201,7 +201,7 @@ class WhiteMage(commands.Cog):
     @commands.command(name='wrist',
                       aliases=['wrists'],
                       brief='Info on commands related to wrists',
-                      description='You can also use this command with the alises below:',
+                      description='You can also use this command with the aliases below:',
                       help='Provides information relative to WhiteMage\'s commands related to wrist exercises')
     async def wrist(self, context):
         await context.send("I can provide you with either a video or summary image of wrist exercises for Gamers.\n"
@@ -215,7 +215,7 @@ class WhiteMage(commands.Cog):
     @commands.command(name='wristimage',
                       aliases=['wrist_image', 'wrist-image', 'wristsimage', 'wrists_image', 'wrists-image'],
                       brief="Summary image of Dr. Levi's wrist exercises.",
-                      description='You can also use this command with the alises below:',
+                      description='You can also use this command with the aliases below:',
                       help="Provides an image summarizing the exercises recommended by Dr. Levi in his video "
                                   "(available with the '?wristvideo' commands and its variants)")
     async def wrist_image(self, context):
@@ -229,7 +229,7 @@ class WhiteMage(commands.Cog):
     @commands.command(name='wristvideo',
                       aliases=['wrist_video', 'wrist-video', 'wristsvideo', 'wrists_video', 'wrists-video'],
                       brief="Video of Dr. Levi's hand and wrist exercises.",
-                      description='You can also use this command with the alises below:',
+                      description='You can also use this command with the aliases below:',
                       help="Provides you with the link to the video of the hand and wrist exercises recommended "
                                   "by Dr. Levi.")
     async def wrist_video(self, context):
@@ -242,7 +242,7 @@ class WhiteMage(commands.Cog):
     @commands.command(name='thumb',
                       aliases=['thumbs'],
                       brief='Information and timestamp for thumb and finger exercises',
-                      description='You can also use this command with the alises below:',
+                      description='You can also use this command with the aliases below:',
                       help='Provides you with the link to the video about hand and wrist exercises with a timestamp, '
                            'starting at the part where the thumb/finger-related exercises start.')
     async def thumb(self, context):
@@ -257,7 +257,7 @@ class WhiteMage(commands.Cog):
     @commands.command(name='start',
                       aliases=['wriststart', 'pingstart', 'gamestart'],
                       brief='Use this when you start gaming and want wrist exercise pings',
-                      description='You can also use this command with the alises below:',
+                      description='You can also use this command with the aliases below:',
                       help='Registers you for wrist exercise pings sent by DM.\n'
                            'This command is to be used when you start a game of something that requires \n'
                            'effort from your hands and wrist, like League of Legends, Counter Strike, Warframe, etc.,\n'
