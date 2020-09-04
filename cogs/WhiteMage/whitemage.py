@@ -1,16 +1,18 @@
-import discord
-from discord.ext import commands
-from utils import is_bot_admin
-from utils import fetch_admin
 import json
-import time
 import asyncio
+from time import time
+from os.path import dirname
+from discord import Activity, ActivityType
+from discord.ext.commands import Cog, command, is_owner
+
 
 #######################################################################################################################
 #                                 Setting up our constants for whitemage                                              #
 #######################################################################################################################
 
 # > Whitemage's basic info
+from utils import get_hidden_commands
+
 WHITEMAGE_DATA_FILE = 'data/info/whitemage.json'
 WHITEMAGE_BRIEF = "\n:flag_us: Hi, I'm WhiteMage, a gentle nurse bot designed to help you with " \
                   "your general health needs. I reply to commands starting with '?'.\n"\
@@ -77,7 +79,7 @@ EXO_100 = "some hand exercises.\n" \
 #                                         ---  'Whitemage' cog  ---                                                   #
 #                             Main (and only) cog for our Nurse bot, WhiteMage                                        #
 #######################################################################################################################
-class WhiteMage(commands.Cog):
+class WhiteMage(Cog):
     def __init__(self, client):
         # Passing the bot's (AKA client's) information
         self.client = client
@@ -91,7 +93,7 @@ class WhiteMage(commands.Cog):
             print("/!\\ WHITEMAGE DATA (INFO) NOT FOUND AT {}, DEFAULTING TO BLANK VALUES!".format(WHITEMAGE_DATA_FILE))
             self.info = {
                 'known_guilds': [],
-                'latest_update_time': time.time()
+                'latest_update_time': time()
             }
 
         # Initializing the dictionary keeping information on users having requested exercise pings.
@@ -113,33 +115,36 @@ class WhiteMage(commands.Cog):
     ###################################################################################################################
 
     # Event handler for initial boot up of the bot. This could be done in __init__ as well, but is way clearer this way.
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_ready(self):
         # Changing the bot's activity feed
-        await self.client.change_presence(activity=discord.Activity(name="use ?help", type=discord.ActivityType['listening']))
+        await self.client.change_presence(activity=Activity(name="use ?help",
+                                                            type=ActivityType['listening']))
 
-        whitemage_intro_msg = ":flag_us: Allow me to introduce myself.\nI am WhiteMage, " \
-                              "a gentle bot designed to help you with your general health needs.\n" \
-                              'I reply to commands starting with the \'?\' sign. ' \
-                              'To get all of my possible commands, just type \'?help\' ' \
-                              "in any chatroom or via PM.\n" \
-                              'I generally work by pinging you via Personal Messages (PMs). ' \
-                              "Please treat me kindly.\n" \
-                              'PS : If you have any ideas about some improvements for this bot, ' \
-                              'please send them ' \
-                              'to my maker, {0.mention}.' \
-                              "\n\n" \
-                              ":flag_fr: Permettez-moi de me présenter.\n Je suis WhiteMage, " \
-                              'un gentil bot infirmier conçu pour vous aider quant à vos ' \
-                              "besoins de santé.\n" \
-                              'Je réponds aux commandes commençant par le caractère \'?\'. ' \
-                              'Pour connaitre l\'entièreté de mes commandes, tapez \'?help\' dans ' \
-                              "n\'importe quel salon de chat ou via MP.\n" \
-                              'En général, je compte vous ping via Message Personnel (MP). ' \
-                              "Soyez gentil avec moi.\n" \
-                              'PS : Si vous avez des idées d\'améliorations pour ce bot, ' \
-                              'veuillez les envoyer à mon' \
-                              'créateur, {0.mention}.'.format(await fetch_admin(self.client))
+        # Function removed entirely. May come back later on, but putting it in "on_ready" isn't optimal.
+
+        # whitemage_intro_msg = ":flag_us: Allow me to introduce myself.\nI am WhiteMage, " \
+        #                       "a gentle bot designed to help you with your general health needs.\n" \
+        #                       'I reply to commands starting with the \'?\' sign. ' \
+        #                       'To get all of my possible commands, just type \'?help\' ' \
+        #                       "in any chatroom or via PM.\n" \
+        #                       'I generally work by pinging you via Personal Messages (PMs). ' \
+        #                       "Please treat me kindly.\n" \
+        #                       'PS : If you have any ideas about some improvements for this bot, ' \
+        #                       'please send them ' \
+        #                       'to my maker, {0.mention}.' \
+        #                       "\n\n" \
+        #                       ":flag_fr: Permettez-moi de me présenter.\n Je suis WhiteMage, " \
+        #                       'un gentil bot infirmier conçu pour vous aider quant à vos ' \
+        #                       "besoins de santé.\n" \
+        #                       'Je réponds aux commandes commençant par le caractère \'?\'. ' \
+        #                       'Pour connaitre l\'entièreté de mes commandes, tapez \'?help\' dans ' \
+        #                       "n\'importe quel salon de chat ou via MP.\n" \
+        #                       'En général, je compte vous ping via Message Personnel (MP). ' \
+        #                       "Soyez gentil avec moi.\n" \
+        #                       'PS : Si vous avez des idées d\'améliorations pour ce bot, ' \
+        #                       'veuillez les envoyer à mon' \
+        #                       'créateur, {0.mention}.'.format(self.client.owner)
 
         # Function removed entirely. May come back later on, but putting it in "on_ready" isn't optimal.
 
@@ -160,10 +165,10 @@ class WhiteMage(commands.Cog):
         #
         #     # # Informing known guilds about an update
         #     # else:
-        #     #     if time.time() - self.info.setdefault('latest_update_time', time.time()) > 86401:
+        #     #     if time() - self.info.setdefault('latest_update_time', time()) > 86401:
         #     #         # 86400 is the number of seconds in a day.
         #     #         # This is so the update message only appears once per day at best.
-        #     #         self.info['latest_update_time'] = time.time()
+        #     #         self.info['latest_update_time'] = time()
         #     #         await guild.system_channel.send(WHITEMAGE_UPDATE_MSG)
 
         # Saving new known guilds data
@@ -175,7 +180,7 @@ class WhiteMage(commands.Cog):
         await self.wrist_loop()
 
     # Event listener for messages sent to Whitemage
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_message(self, message):
         # IF we have a DM/PM (Personal Message) sent directly to Whitemage without being a command :
         # - we send information on how to use Whitemage to the user
@@ -198,11 +203,11 @@ class WhiteMage(commands.Cog):
     # The following commands' description are provided in the decorator and are pretty self-explanatory.
     # No comments will be written on simpler functions.
 
-    @commands.command(name='wrist',
-                      aliases=['wrists'],
-                      brief='Info on commands related to wrists',
-                      description='You can also use this command with the aliases below:',
-                      help='Provides information relative to WhiteMage\'s commands related to wrist exercises')
+    @command(name='wrist',
+             aliases=['wrists'],
+             brief='Info on commands related to wrists',
+             description='You can also use this command with the aliases below:',
+             help='Provides information relative to WhiteMage\'s commands related to wrist exercises')
     async def wrist(self, context):
         await context.send("I can provide you with either a video or summary image of wrist exercises for Gamers.\n"
                            "The commands *?wristimage* and *?wristvideo* (and their respective variants) "
@@ -212,12 +217,12 @@ class WhiteMage(commands.Cog):
                            "which you need to use when you start playing a game.\n"
                            "**Please take care of your wrists!**")
 
-    @commands.command(name='wristimage',
-                      aliases=['wrist_image', 'wrist-image', 'wristsimage', 'wrists_image', 'wrists-image'],
-                      brief="Summary image of Dr. Levi's wrist exercises.",
-                      description='You can also use this command with the aliases below:',
-                      help="Provides an image summarizing the exercises recommended by Dr. Levi in his video "
-                                  "(available with the '?wristvideo' commands and its variants)")
+    @command(name='wristimage',
+             aliases=['wrist_image', 'wrist-image', 'wristsimage', 'wrists_image', 'wrists-image'],
+             brief="Summary image of Dr. Levi's wrist exercises.",
+             description='You can also use this command with the aliases below:',
+             help="Provides an image summarizing the exercises recommended by Dr. Levi in his video "
+                  "(available with the '?wristvideo' commands and its variants)")
     async def wrist_image(self, context):
         await context.send("Here's a summary of wrist exercises recommended by Dr. Levi in his Youtube video "
                            "(provided below).\n"
@@ -226,12 +231,12 @@ class WhiteMage(commands.Cog):
                            "recommended time intervals for each different exercise.\n"
                            "https://imgur.com/5vktp17\n")
 
-    @commands.command(name='wristvideo',
-                      aliases=['wrist_video', 'wrist-video', 'wristsvideo', 'wrists_video', 'wrists-video'],
-                      brief="Video of Dr. Levi's hand and wrist exercises.",
-                      description='You can also use this command with the aliases below:',
-                      help="Provides you with the link to the video of the hand and wrist exercises recommended "
-                                  "by Dr. Levi.")
+    @command(name='wristvideo',
+             aliases=['wrist_video', 'wrist-video', 'wristsvideo', 'wrists_video', 'wrists-video'],
+             brief="Video of Dr. Levi's hand and wrist exercises.",
+             description='You can also use this command with the aliases below:',
+             help="Provides you with the link to the video of the hand and wrist exercises recommended "
+                   "by Dr. Levi.")
     async def wrist_video(self, context):
         await context.send("Here's the video of hand and wrist exercises recommended by Dr. Levi (provided below).\n"
                            "When you start playing a game, use *?start* to have me ping you with a PM at specific "
@@ -239,12 +244,12 @@ class WhiteMage(commands.Cog):
                            "recommended time intervals for each different exercise.\n"
                            "https://www.youtube.com/watch?v=EiRC80FJbHU\n")
 
-    @commands.command(name='thumb',
-                      aliases=['thumbs'],
-                      brief='Information and timestamp for thumb and finger exercises',
-                      description='You can also use this command with the aliases below:',
-                      help='Provides you with the link to the video about hand and wrist exercises with a timestamp, '
-                           'starting at the part where the thumb/finger-related exercises start.')
+    @command(name='thumb',
+             aliases=['thumbs'],
+             brief='Information and timestamp for thumb and finger exercises',
+             description='You can also use this command with the aliases below:',
+             help='Provides you with the link to the video about hand and wrist exercises with a timestamp, '
+                  'starting at the part where the thumb/finger-related exercises start.')
     async def thumb(self, context):
         await context.send("Here's the timestamp for the finger exercises (especially thumb exercises) "
                            "in Dr. Levi's video.\n"
@@ -254,16 +259,16 @@ class WhiteMage(commands.Cog):
     # This command is the main reason for the creation of the bot.
     # ?start is to be used when you start gaming and want Whitemage to ping you with wrist/hand exercises to keep
     # you healthy and avoid injuries and future carpal tunnel syndromes.
-    @commands.command(name='start',
-                      aliases=['wriststart', 'pingstart', 'gamestart'],
-                      brief='Use this when you start gaming and want wrist exercise pings',
-                      description='You can also use this command with the aliases below:',
-                      help='Registers you for wrist exercise pings sent by DM.\n'
-                           'This command is to be used when you start a game of something that requires \n'
-                           'effort from your hands and wrist, like League of Legends, Counter Strike, Warframe, etc.,\n'
-                           ' and will send you pings for exercises every hour, hour and a half, two hours and a half '
-                           'and three hours and a half.'
-                      )
+    @command(name='start',
+             aliases=['wriststart', 'pingstart', 'gamestart'],
+             brief='Use this when you start gaming and want wrist exercise pings',
+             description='You can also use this command with the aliases below:',
+             help='Registers you for wrist exercise pings sent by DM.\n'
+                  'This command is to be used when you start a game of something that requires \n'
+                  'effort from your hands and wrist, like League of Legends, Counter Strike, Warframe, etc.,\n'
+                  ' and will send you pings for exercises every hour, hour and a half, two hours and a half '
+                  'and three hours and a half.'
+             )
     async def start(self, context):
         # If the user is already registered for wrist exercise pings
         if context.author.id in self.wrist.keys():
@@ -294,7 +299,7 @@ class WhiteMage(commands.Cog):
                                   "See you in an hour!".format(context.author))
 
         # Register info necessary for pings in self.wrist
-        launch_time = time.time()
+        launch_time = time()
         self.wrist[context.author.id] = {
             'program_start': launch_time,                   # Time of the start of pings (when ?start was called)
             'last_ping': launch_time,                       # Time of the last ping done to user
@@ -314,7 +319,7 @@ class WhiteMage(commands.Cog):
     async def wrist_loop(self):
         for user_id in self.wrist:
 
-            curtime = time.time()
+            curtime = time()
             also = False if curtime - self.wrist[user_id]['last_ping'] >= ALSO_MARGIN else True
 
             if curtime - self.wrist[user_id]['last_330'] >= HOUR330:
@@ -369,11 +374,11 @@ class WhiteMage(commands.Cog):
     # This command removes you from the list of users to ping with exercises.
     # If a certain amount of time (over 1h30) has passed since you called ?start (i.e. since you started gaming),
     # the bot also dumps the remaining exercises and advises you to do them as well (without being pushy).
-    @commands.command(name='stop')
+    @command(name='stop')
     async def stop(self, context):
         if context.author.id in self.wrist:
 
-            curtime = time.time()
+            curtime = time()
             total_time_minutes = int((curtime - self.wrist[context.author.id]['program_start']) / 60)
             cycle_time = curtime - self.wrist[context.author.id]['last_330']  # last_330 is the beginning of a cycle
 
@@ -419,40 +424,32 @@ class WhiteMage(commands.Cog):
 
     # A few commands I don't want every user to abuse, but can be useful if someone forgot to turn off the bot
     # and is using computation power for hours and hours.
-
-    # This command provides you with admin-only functions.
-    # Said function names are hard-coded, because I didn't find a way to use the so-called show_hidden=True in
-    # discord.ext.commands.HelpCommand or DefaultHelpCommand or MinimalistHelpCommand or whichever,
-    # so I had to make my own but didn't wanna waste time on anything complicated
-    # (since I won't make a lot of admin functions).
-    @commands.command(nam='adminhelp',
-                      hidden=True,
-                      aliases=['admincommands'])
+    @is_owner()
+    @command(nam='adminhelp',
+             hidden=True,
+             aliases=['admincommands'])
     async def adminhelp(self, context):
-        if is_bot_admin(context):
-            admin_cmds = ['whowrist']
-            admin = await fetch_admin(self.client)
-            await admin.send("Current admin commands on whitemage are:\n" + ';'.join(admin_cmds))
+        await get_hidden_commands(self.client, dirname(__file__))
 
     # This command informs you on who is currently registered for wrist exercise pings, i.e. which user is in self.wrist
-    @commands.command(name='whowrist',
-                      hidden=True)
+    @is_owner()
+    @command(name='whowrist',
+             hidden=True)
     async def whowrist(self, context):
-        if is_bot_admin(context):
-            # Fetch user object of admin (to allow a DM/PM)
-            admin = await fetch_admin(self.client)
+        # Fetch user object of admin (to allow a DM/PM)
+        owner = self.client.owner
 
-            # Note : fetching users and using them (like with user.mention) must be done separately, or else it fails.
-            users = [await self.client.fetch_user(userid) for userid in self.wrist]
-            usernames = [user.mention for user in users]
+        # Note : fetching users and using them (like with user.mention) must be done separately, or else it fails.
+        users = [await self.client.fetch_user(userid) for userid in self.wrist]
+        usernames = [user.mention for user in users]
 
-            await admin.send("Currently requesting for wrist exercises:\n")
+        await owner.send("Currently requesting for wrist exercises:\n")
 
-            # If no id is present in the list
-            if not usernames:
-                await admin.send("No one")
-            else:
-                await admin.send(';'.join(usernames))
+        # If no id is present in the list
+        if not usernames:
+            await owner.send("No one")
+        else:
+            await owner.send(';'.join(usernames))
 
 
 def setup(client):

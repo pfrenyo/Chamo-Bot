@@ -1,10 +1,6 @@
-import json
-from os import listdir
-from os.path import dirname, join
-
+from os.path import dirname
+from utils import get_hidden_commands
 from discord.ext.commands import Cog, command, check_any, is_owner, has_permissions
-from utils import is_bot_admin
-from utils import fetch_admin
 
 
 #######################################################################################################################
@@ -38,25 +34,12 @@ class Admin(Cog):
         else:
             print('Access denied: You cannot EVER unload extensions \'admin\' or \'debug\'.')
 
+    @check_any(has_permissions(administrator=True), is_owner())
     @command(nam='adminhelp',
              hidden=True,
              aliases=['admincommands'])
     async def adminhelp(self, context):
-        admin_commands = {"admin.py": ["adminhelp"]}
-        cogs_directory = dirname(__file__)  # getcwd()
-        for cog_filename in filter(lambda z: z != "admin.py", listdir(cogs_directory)):
-            with open(join(cogs_directory, cog_filename)) as f:
-                cog_code = f.read()
-                cog_code = cog_code.split("hidden=True")
-                if len(cog_code) < 2:
-                    continue
-                cog_code = cog_code[1:]
-                for cmd in cog_code:
-                    cmd = cmd.split("async def ")[1]
-                    cmd = cmd.split("(self")[0]
-                    admin_commands.setdefault(cog_filename, []).append(cmd)
-        admin = await fetch_admin(self.client)
-        await admin.send("Current admin commands on admin are:\n```{}```".format(json.dumps(admin_commands, indent=4)))
+        await get_hidden_commands(self.client, dirname(__file__))
 
 
 def setup(client):

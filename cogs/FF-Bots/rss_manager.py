@@ -1,20 +1,20 @@
-from discord.ext import commands
+import json
 import discord
 import asyncio
 import datetime
 import feedparser
-import pprint
-import json
-from difflib import get_close_matches
+from os.path import join
+from pprint import pprint
 from urllib.parse import urlparse
-from utils import is_bot_admin
-from utils import fetch_admin
+from difflib import get_close_matches
+from discord.ext.commands import Cog, command, check_any, is_owner, has_permissions
+
 HORRIBLE720 = 'horriblesubs_720p'
 HORRIBLESUBS_720p_URL = "http://www.horriblesubs.info/rss.php?res=720"
-RSSMANAGER_DATA_FILE = 'data/info/rssmanager.json'
+RSSMANAGER_DATA_FILE = join("data", "info", "rssmanager.json")
 HOTPINK = 0xFF69B4
 MISSING_THUMBNAIL = 'https://i.imgur.com/h7AYd0H.png'
-HORRIBLESUBS_URL_BASIS = 'https://horriblesubs.info/shows/'
+HORRIBLESUBS_BASE_URL = 'https://horriblesubs.info/shows/'
 RSS_SLEEPTIME = 60
 HS_ANIME_NOT_EXIST = "The anime you're trying to add to the watch list doesn't seem to exist, "\
                      "and no similar match has been found among the names of "\
@@ -43,9 +43,9 @@ SHADOWVERSE_CHANNEL = 559401293928464417
 # @pre: the name of the anime, the rssinfo of the anime.
 # @post: a pretty embed to be sent by the bot
 def create_embed_horriblesubs(anime_name, episode_number, rssinfo):
-    url_basis = rssinfo[HORRIBLE720][anime_name].setdefault('url_basis', '') or \
-                HORRIBLESUBS_URL_BASIS + anime_name.lower().replace(' ', '-')
-    episode_url = url_basis + '/#' + episode_number
+    base_url = rssinfo[HORRIBLE720][anime_name].setdefault('base_url', '') or \
+               HORRIBLESUBS_BASE_URL + anime_name.lower().replace(' ', '-')
+    episode_url = base_url + '/#' + episode_number
     episode_date = datetime.datetime.fromtimestamp(rssinfo[HORRIBLE720][anime_name]['last_update'])
 
     embed = discord.Embed(title=anime_name, description='New episode out on HorribleSubs!', color=HOTPINK)
@@ -76,14 +76,14 @@ def create_empty_anime():
     return {'channels': [],
             'last_update': 0,
             'thumbnail': '',
-            'url_basis': ''}
+            'base_url': ''}
 
 
 #######################################################################################################################
 #                                        ---  'RSS Manager' cog  ---                                                  #
 #                            Cog handling RSS feeds from HorribleSubs (for anime updates)                             #
 #######################################################################################################################
-class RSSManager(commands.Cog):
+class RSSManager(Cog):
     # Big thanks to Baawaah, AKA S.TRAN, for teaching me how to make a discord bot and use RSS feeds.
     # This class is my own take on Baawaah's Anime RSS manager:
     # https://github.com/Baawaah/DiscordBot-2N/blob/master/extensions/Anime.py
@@ -115,11 +115,11 @@ class RSSManager(commands.Cog):
         with open(RSSMANAGER_DATA_FILE, 'r') as f:
             self.rssinfo = json.load(f)
 
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_ready(self):
         await self.horriblesubs_720p_loop()
 
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_message(self, message):
         if message.channel.id == SHADOWVERSE_CHANNEL and message.content[0] in self.client.BOT_PREFIX:
             pass
@@ -160,7 +160,7 @@ class RSSManager(commands.Cog):
         await asyncio.sleep(RSS_SLEEPTIME)
         await asyncio.ensure_future(self.horriblesubs_720p_loop())
 
-    @commands.command(name='addanime')
+    @command(name='addanime')
     async def addanime(self, context):
 
         cur_channel = context.channel.id
@@ -237,7 +237,7 @@ class RSSManager(commands.Cog):
                 else:
                     await context.send(HS_ANIME_SIMILAR_FOUND.format(', '.join(similar_names)))
 
-    @commands.command(name='delanime')
+    @command(name='delanime')
     async def delanime(self, context):
         # Note: currently throws an Exception if deleting from PM channel (which is None). Fix this!
         content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX) + 'delanime').strip()
@@ -250,14 +250,14 @@ class RSSManager(commands.Cog):
                                .format(content))
             await self.save_rssmanager_data()
             if not self.rssinfo[HORRIBLE720][content]['channels']:
-                admin = await fetch_admin(self.client)
-                await admin.send("Hello administrator {0.mention}, "
-                                 "there seem to be no channels watching *{1}* left.\n".format(admin, content))
+                owner = self.client.owner
+                await owner.send("Hello administrator {0.mention}, "
+                                 "there seem to be no channels watching *{1}* left.\n".format(owner, content))
         else:
             await context.send("The anime *{}* doesn't seem to be on this channel watch list.\n"
                                "There is nothing to delete.".format(content))
 
-    @commands.command(name='lastupdate')
+    @command(name='lastupdate')
     async def lastupdate(self, context):
         content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX)+'lastupdate').strip().lower()
         if content.startswith('"') and content.endswith('"'):
@@ -280,7 +280,7 @@ class RSSManager(commands.Cog):
             await context.send("The anime you mentionned (*{}*) doesn't seem to be in my HorribleSubs feed database.\n"
                                "Use *!addanime* to add an anime of your choice to my feed.".format(content))
 
-    @commands.command()
+    @command()
     async def addthumbnail(self, context, url, *, anime_name):
         if anime_name.startswith('"') and anime_name.endswith('"'):
             anime_name = anime_name.strip('" ')
@@ -296,7 +296,7 @@ class RSSManager(commands.Cog):
                                "Use *!addanime* to add it first.")
 
     # Force-delete an entire anime entry, deleting all the channels, the thumbnail, last update time, etc. with it.
-    @commands.command(name='forcedelanime_iamsure', hidden=True)
+    @command(name='forcedelanime_iamsure', hidden=True)
     async def forcedelanime_iamsure(self, context):
         if is_bot_admin(context):
             content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX) + 'forcedelanime_iamsure')\
@@ -315,26 +315,24 @@ class RSSManager(commands.Cog):
             await context.send("Only the adminstrator can use the *force delete* function")
 
     # Modify the url basis of an anime.
-    @commands.command(name='addurl', hidden=True)
+    @check_any(has_permissions(administrator=True), is_owner())
+    @command(name='addurl', hidden=True)
     async def addurl(self, context, url, *, anime_name):
-        if is_bot_admin(context):
-            if anime_name.startswith('"') and anime_name.endswith('"'):
-                anime_name = anime_name.strip('" ')
+        if anime_name.startswith('"') and anime_name.endswith('"'):
+            anime_name = anime_name.strip('" ')
 
-            if anime_name in self.rssinfo[HORRIBLE720].keys():
-                url_parsed = urlparse(url)
-                if url_parsed.scheme and url_parsed.netloc:  # If these two exist, it is a valid URL according to urlparse
-                    self.rssinfo[HORRIBLE720][anime_name]['url_basis'] = url
-                    await context.send("Successfully added url_basis to *{}*.".format(anime_name))
-                    await self.save_rssmanager_data()
-        else:
-            await context.send("Only the adminstrator can use function *addurl*")
+        if anime_name in self.rssinfo[HORRIBLE720].keys():
+            url_parsed = urlparse(url)
+            if url_parsed.scheme and url_parsed.netloc:  # If these two exist, it is a valid URL according to urlparse
+                self.rssinfo[HORRIBLE720][anime_name]['base_url'] = url
+                await context.send("Successfully added base_url to *{}*.".format(anime_name))
+                await self.save_rssmanager_data()
 
     # Dumps self.rssinfo in a pretty print on stdout.
-    @commands.command(name='dumprssinfo', hidden=True)
+    @is_owner()
+    @command(name='dumprssinfo', hidden=True)
     async def dumprssinfo(self, context):
-        if is_bot_admin(context):
-            pprint.pprint(self.rssinfo)
+        pprint(self.rssinfo)
 
 
 def setup(client):

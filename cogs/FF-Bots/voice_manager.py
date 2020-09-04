@@ -1,19 +1,16 @@
 import json
 from os.path import join
-
-from discord.ext import commands
-
-from utils import is_bot_admin
+from discord.ext.commands import Cog, command, check_any, is_owner, has_permissions
 
 VOICE_MANAGER_DATA_FILE = join("data", "info", "voicemanager.json")
-MUTABLE_CHANNELS = "mutable_channels"
+MUTABLE_CHANNELS = "mutable_channels"  # the right spelling is 'muteable' but in this case but whatever
 
 
 #######################################################################################################################
 #                                        ---  'Voice Manager' cog  ---                                                #
 #                         Cog containing commands managing a select number of voice chats                             #
 #######################################################################################################################
-class VoiceManager(commands.Cog):
+class VoiceManager(Cog):
     """
     Note to self:
     Maybe implement a backup unmute mechanism
@@ -46,14 +43,10 @@ class VoiceManager(commands.Cog):
         with open(VOICE_MANAGER_DATA_FILE, 'r') as f:
             self.data = json.load(f)
 
-    @commands.check
-    @commands.command(name='set_mutable_channel',
-                      hidden=True)
+    @check_any(has_permissions(administrator=True), is_owner())
+    @command(name='set_mutable_channel',
+             hidden=True)
     async def set_mutable_channel(self, context):
-        if not is_bot_admin(context):
-            await context.send("Only the adminstrator can use the *set_mutable_channel* function")
-            return
-
         if not context.author.voice or not context.author.voice.channel:
             await context.send("You are not connected to a voice channel")
             return
@@ -72,7 +65,7 @@ class VoiceManager(commands.Cog):
         self.data[MUTABLE_CHANNELS][cur_voice_channel_id] = False
         await self.save_data()
 
-    @commands.command(name='mute')
+    @command(name='mute')
     async def mute(self, context):
         if not context.author.voice or not context.author.voice.channel:
             await context.send("You are not connected to a voice channel")
@@ -95,7 +88,7 @@ class VoiceManager(commands.Cog):
         await context.send(f"Channel '{cur_voice_channel.name}' muted.")
         await self.save_data()
 
-    @commands.command(name='unmute')
+    @command(name='unmute')
     async def unmute(self, context):
         if not context.author.voice or not context.author.voice.channel:
             await context.send("You are not connected to a voice channel")
@@ -118,14 +111,10 @@ class VoiceManager(commands.Cog):
         await context.send(f"Channel '{cur_voice_channel.name}' unmuted.")
         await self.save_data()
 
-    @commands.command(name='stfu',
-                      hidden=True)
+    @check_any(has_permissions(administrator=True), is_owner())
+    @command(name='stfu',
+             hidden=True)
     async def stfu(self, context):
-        if not is_bot_admin(context):
-            await context.send("As a mark of blatant power abuse by the creator of this bot, "
-                               "only the creator of the bot can use the *stfu* function")
-            return
-
         if not context.author.voice or not context.author.voice.channel:
             await context.send("You are not connected to a voice channel")
             return
@@ -139,14 +128,10 @@ class VoiceManager(commands.Cog):
         await context.send(f"Everyone besides the admin has been muted on '{cur_voice_channel.name}'.")
         await self.save_data()
 
-    @commands.command(name='unstfu',
-                      hidden=True)
+    @check_any(has_permissions(administrator=True), is_owner())
+    @command(name='unstfu',
+             hidden=True)
     async def unstfu(self, context):
-        if not is_bot_admin(context):
-            await context.send("As a mark of blatant power abuse by the creator of this bot, "
-                               "only the creator of the bot can use the *unstfu* function")
-            return
-
         if not context.author.voice or not context.author.voice.channel:
             await context.send("You are not connected to a voice channel")
             return
@@ -159,13 +144,10 @@ class VoiceManager(commands.Cog):
         await context.send(f"Everyone has been unmuted on '{cur_voice_channel.name}'.")
         await self.save_data()
 
-    @commands.command(name='unset_mutable_channel',
-                      hidden=True)
+    @check_any(has_permissions(administrator=True), is_owner())
+    @command(name='unset_mutable_channel',
+             hidden=True)
     async def unset_mutable_channel(self, context):
-        if not is_bot_admin(context):
-            await context.send("Only the adminstrator can use the *unset_mutable_channel* function")
-            return
-
         if not context.author.voice or not context.author.voice.channel:
             await context.send("You are not connected to a voice channel")
             return

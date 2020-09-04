@@ -1,6 +1,6 @@
-from discord.ext.commands import Cog, command
 import requests
-import datetime
+from datetime import datetime
+from discord.ext.commands import Cog, command
 
 
 #######################################################################################################################
@@ -36,20 +36,19 @@ class Misc(Cog):
         else:
             usr = self.client.get_user(chan_id)
             if usr:
-                await context.send("This isn't a real channel name. It's a DM Channel with user:\n{}".format(usr.name))
+                await context.send("This isn't a real channel name. It is a DM Channel with user:\n{}".format(usr.name))
             else:
                 await context.send("This doesn't seem like a valid channel id.")
 
-
     @command(name='epoch2dt')
     async def epoch2dt(self, context, epoch):
-        dt = datetime.datetime.fromtimestamp(float(epoch))
+        dt = datetime.fromtimestamp(float(epoch))
         await context.send("Epoch *{}* is equivalent to datetime *{}*.".format(epoch, dt))
 
     @command(name='dt2epoch')
     async def dt2epoch(self, context, date, time):
         fused = date + " " + time
-        dt = datetime.datetime.strptime(fused, '%Y-%m-%d %H:%M:%S')
+        dt = datetime.strptime(fused, '%Y-%m-%d %H:%M:%S')
         await context.send("Datetime *{}* is equivalent to epoch *{}*.".format(fused, dt.timestamp()))
 
 

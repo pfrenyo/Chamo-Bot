@@ -1,9 +1,7 @@
 import json
-import discord
 from os.path import join
-from discord.ext import commands
-
-from utils import is_bot_admin, send_temporary_msg
+from utils import send_temporary_msg
+from discord.ext.commands import Cog, command, check_any, is_owner, has_permissions
 
 PFRPG_DATA_FILE = join("data", "info", "pfrpg.json")
 ACTIVE_QUEST_CHANNELS = "active_quest_channels"
@@ -51,14 +49,15 @@ quest_template = {
     "extra": None
 }
 
-on_going_pattern = {"player_id": "Pattern class object made of Messages or something, expects responses, analyzes input by user to see if it matches"}
+on_going_pattern = {"player_id": "Pattern class object made of Messages or something, "
+                                 "expects responses, analyzes input by user to see if it matches"}
 
 
 #######################################################################################################################
 #                                      ---  'Pathfinder RPG' cog  ---                                                 #
 #                     Cog containing commands for a specific tabletop RPG (quest list, etc.)                          #
 #######################################################################################################################
-class PathfinderRPG(commands.Cog):
+class PathfinderRPG(Cog):
     def __init__(self, client):
         self.client = client
 
@@ -89,15 +88,10 @@ class PathfinderRPG(commands.Cog):
         # A json to store order of messages
         # dictionary of questname to message id
     
-    #  I really need something to list admin commands
-
-    @commands.command(name='pfrpg_set_quest_channel',
-                      hidden=True)
+    @check_any(has_permissions(administrator=True), is_owner())
+    @command(name='pfrpg_set_quest_channel',
+             hidden=True)
     async def pfrpg_set_quest_channel(self, context):
-        if not is_bot_admin(context):
-            await context.send("Only the adminstrator can use the *pfrpg_set_quest_channel* function")
-            return
-
         cur_channel = context.channel.id
 
         if not cur_channel:
@@ -120,13 +114,10 @@ class PathfinderRPG(commands.Cog):
         await context.message.delete()
         await self.save_data()
 
-    @commands.command(name='pfrpg_unset_quest_channel',
-                      hidden=True)
+    @check_any(has_permissions(administrator=True), is_owner())
+    @command(name='pfrpg_unset_quest_channel',
+             hidden=True)
     async def pfrpg_unset_quest_channel(self, context):
-        if not is_bot_admin(context):
-            await context.send("Only the adminstrator can use the *pfrpg_unset_quest_channel* function")
-            return
-
         cur_channel = context.channel.id
 
         if cur_channel not in self.data[ACTIVE_QUEST_CHANNELS] or not self.data[ACTIVE_QUEST_CHANNELS][cur_channel]:
@@ -140,13 +131,10 @@ class PathfinderRPG(commands.Cog):
         await context.message.delete()
         await self.save_data()
 
-    @commands.command(name='pfrpg_delete_quest_channel_data_iamsure',
-                      hidden=True)
+    @check_any(has_permissions(administrator=True), is_owner())
+    @command(name='pfrpg_delete_quest_channel_data_iamsure',
+             hidden=True)
     async def pfrpg_delete_quest_channel_data_iamsure(self, context):
-        if not is_bot_admin(context):
-            await context.send("Only the adminstrator can use the *pfrpg_delete_quest_channel_data_iamsure* function")
-            return
-
         cur_channel = context.channel.id
 
         if cur_channel not in self.data[ACTIVE_QUEST_CHANNELS]:
@@ -165,36 +153,36 @@ class PathfinderRPG(commands.Cog):
         await context.send("Current channel's quest data successfully deleted.")
         await self.save_data()
 
-    @commands.command()
+    @command()
     async def add_quest(self, context):
         pass
 
-    @commands.command()
+    @command()
     async def edit_quest(self, context):
         pass
 
-    @commands.command()
+    @command()
     async def delete_quest(self, context):
         pass
 
-    @commands.command()
+    @command()
     async def complete_quest(self, context):
         pass
 
-    @commands.command()
+    @command()
     async def add_player(self, context):
         pass
 
-    @commands.command()
+    @command()
     async def edit_player(self, context):
         pass
 
-    @commands.command()
+    @command()
     async def delete_player(self, context):
         pass
 
     # Event listener for messages sent to Moogle
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_message(self, message):
         pass
 

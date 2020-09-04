@@ -1,5 +1,6 @@
 import os
-from discord.ext import commands
+from os.path import join
+from discord.ext.commands import Bot
 
 #######################################################################################################################
 #                                Setting up the script directory as main directory                                    #
@@ -25,9 +26,8 @@ if __name__ == '__main__':
     #                     the client.load_extensions function (using the 'dot' format, i.e. 'folder1.folder2.some_cog').
     COGS_FOLDER = 'cogs'
     DEFAULT_TOKEN_NAME = 'moogle'
-    VALID_TOKEN_NAMES = ['moogle', 'chocobo', 'lamia', 'whitemage']
 
-    WELCOME_PICTURE = "data/img/Chamo2.png"
+    VALID_TOKEN_NAMES = ('moogle', 'chocobo', 'lamia', 'whitemage')
 
     ###################################################################################################################
     #                                          Fetching our tokens                                                    #
@@ -53,17 +53,6 @@ if __name__ == '__main__':
     ###################################################################################################################
     #                                    Fetching our extensions (AKA cogs)                                           #
     ###################################################################################################################
-
-
-
-    # im_files = [for f in os.listdir('.') if f[-3:] == 'png']
-    # HEY!
-
-
-
-
-
-
     # Separating whitemage and the other tokens, using two different cog folders.
     # WhiteMage replies to commands starting with '?', while Moogle, Lamia and Chocobo reply to '.' and '!' commands.
     if token_name == 'whitemage':
@@ -83,14 +72,13 @@ if __name__ == '__main__':
     ###################################################################################################################
 
     # We initialize the bot object as 'client'.
-    client = commands.Bot(command_prefix=BOT_PREFIX)
+    client = Bot(command_prefix=BOT_PREFIX)
 
     # Setting up global variables (accessible to all cogs/extensions)
     client.BOT_PREFIX = BOT_PREFIX
     client.COGS_FOLDER = COGS_FOLDER
     client.CURRENT_BOT = token_name
     client.EXTENSIONS = EXTENSIONS
-    client.WELCOME_PICTURE = WELCOME_PICTURE
 
     ###################################################################################################################
     #                             Setting up event handlers (common to all bots)                                      #
@@ -99,6 +87,8 @@ if __name__ == '__main__':
     # Event handler for boot-up
     @client.event
     async def on_ready():
+        if not hasattr(client, 'AppInfo'):
+            client.AppInfo = await client.application_info()
         print("---------------------------------------------------------------")
         print("Bot logged in as >>> {0.name} <<< (id : {0.id})".format(client.user))
         print("---------------------------------------------------------------")

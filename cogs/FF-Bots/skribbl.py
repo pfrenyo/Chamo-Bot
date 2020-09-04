@@ -1,15 +1,15 @@
-from discord.ext import commands
-from os.path import dirname, join
+from os.path import join
 from discord import File as discordFile
+from discord.ext.commands import Cog, command
 
-SKRIBBL_RESOURCE_LOCATION = join(dirname(dirname(dirname(__file__))), "data", "skribbl")
+SKRIBBL_RESOURCE_LOCATION = join("data", "skribbl")
 
 
 #######################################################################################################################
 #                                          ---  'Skribbl' cog  ---                                                    #
 #                               Cog containing commands for Skribbl.io functions                                      #
 #######################################################################################################################
-class Skribbl(commands.Cog):
+class Skribbl(Cog):
     def __init__(self, client):
         self.client = client
         self.on_going_vocabulary = None
@@ -17,7 +17,7 @@ class Skribbl(commands.Cog):
         self.active_words = {}
         self.words_per_user = {}
 
-    @commands.command()
+    @command()
     async def skribbl_start(self, context, words_per_person, *, skribbl_name=None):
         if not skribbl_name:
             await context.channel.send("This is not how we use this function. Use it as follows:\n"
@@ -39,7 +39,7 @@ class Skribbl(commands.Cog):
         await context.channel.send(f"Started skribbl vocabulary with name {skribbl_name}.")
 
     # Event listener for messages sent to Moogle, Skribbl-related functions
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_message(self, message):
         if message.guild is None \
                 and not message.author.bot \
@@ -69,7 +69,7 @@ class Skribbl(commands.Cog):
                                        f"{self.words_per_user[message.author.id][self.on_going_vocabulary]} words "
                                        f"left.")
 
-    @commands.command()
+    @command()
     async def skribbl_stop(self, context, skribbl_name):
         if skribbl_name not in self.active_words:
             await context.channel.send(f"No skribbl vocabulary called {skribbl_name}.")
