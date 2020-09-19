@@ -32,8 +32,8 @@ class Welcome(commands.Cog):
                 print("> Successfully loaded data from {}".format(CUSTOM_WELCOME_MESSAGES_DATA_FILE))
         except IOError:
             self.custom_welcome_messages = None
-            print("No custom welcome message file (at {}).\n"
-                  "Feel free to make one if you want custom welcome messages "
+            print("> No custom welcome message file (at {}).\n"
+                  "> Feel free to make one if you want custom welcome messages "
                   "for some specific servers (instructions in data/info/README.md)."
                   .format(CUSTOM_WELCOME_MESSAGES_DATA_FILE))
 
@@ -44,9 +44,9 @@ class Welcome(commands.Cog):
                 with open(CHAMO_SERVER_ID, 'r') as f:
                     self.chamo_server_id = int(f.readline())
             else:
-                print("No Chamo welcome picture: ignoring hard-coded Chamo server shenanigans.")
+                print("> No Chamo welcome picture: ignoring hard-coded Chamo server shenanigans.")
         except IOError:
-            print("Could not find the Chamo server id: ignoring hard-coded Chamo server shenanigans.")
+            print("> Could not find the Chamo server id: ignoring hard-coded Chamo server shenanigans.")
 
     # Event handler for new member join
     @commands.Cog.listener()

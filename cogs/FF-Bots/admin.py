@@ -13,7 +13,7 @@ class Admin(Cog):
 
     # Command to load a cog (also called 'extension' or 'module')
     @check_any(has_permissions(administrator=True), is_owner())
-    @command()
+    @command(name='load', hidden=True)
     async def load(self, context, extension):
         try:
             self.client.load_extension(self.client.COGS_FOLDER+extension)
@@ -23,7 +23,7 @@ class Admin(Cog):
 
     # Command to unload a cog (also called 'extension' or 'module')
     @check_any(has_permissions(administrator=True), is_owner())
-    @command()
+    @command(name='unload', hidden=True)
     async def unload(self, context, extension):
         if extension != "admin" and extension != "debug":
             try:

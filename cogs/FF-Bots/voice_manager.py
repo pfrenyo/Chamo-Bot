@@ -36,7 +36,7 @@ class VoiceManager(Cog):
     # Save function to keep information about VoiceManager between instances
     async def save_data(self):
         with open(VOICE_MANAGER_DATA_FILE, 'w') as f:
-            json.dump(self.data, f)
+            json.dump(self.data, f, indent=4)
 
     # Load function loading up information about previous instances of VoiceManager
     async def load_data(self):

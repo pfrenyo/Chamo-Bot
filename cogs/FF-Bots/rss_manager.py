@@ -1,12 +1,13 @@
 import json
-import discord
 import asyncio
 import datetime
 import feedparser
 from os.path import join
+from discord import Embed
 from pprint import pprint
 from urllib.parse import urlparse
 from difflib import get_close_matches
+from utils import send_embed_to_all_channels
 from discord.ext.commands import Cog, command, check_any, is_owner, has_permissions
 
 HORRIBLE720 = 'horriblesubs_720p'
@@ -48,7 +49,7 @@ def create_embed_horriblesubs(anime_name, episode_number, rssinfo):
     episode_url = base_url + '/#' + episode_number
     episode_date = datetime.datetime.fromtimestamp(rssinfo[HORRIBLE720][anime_name]['last_update'])
 
-    embed = discord.Embed(title=anime_name, description='New episode out on HorribleSubs!', color=HOTPINK)
+    embed = Embed(title=anime_name, description='New episode out on HorribleSubs!', color=HOTPINK)
     embed.set_author(name='HorribleSubs')
     embed.set_thumbnail(url=rssinfo[HORRIBLE720][anime_name]['thumbnail'] or MISSING_THUMBNAIL)
     embed.add_field(name="Name", value=anime_name, inline=True)
@@ -108,7 +109,7 @@ class RSSManager(Cog):
     # Save function to keep information about RSSManager between instances
     async def save_rssmanager_data(self):
         with open(RSSMANAGER_DATA_FILE, 'w') as f:
-            json.dump(self.rssinfo, f)
+            json.dump(self.rssinfo, f, indent=4)
 
     # Load function loading up information about previous instances of RSSManager
     async def load_rssmanager_data(self):
@@ -147,14 +148,9 @@ class RSSManager(Cog):
                         self.rssinfo[HORRIBLE720][anime_name]['last_update'] = entry_update
                         episode_number = get_episode_number(entry['title'])
                         embed = create_embed_horriblesubs(anime_name, episode_number, self.rssinfo)
-                        for channel_id in self.rssinfo[HORRIBLE720][anime_name]['channels']:
-                            channel = self.client.get_channel(channel_id)
-                            if channel:
-                                await channel.send(embed=embed)
-                            else:
-                                user = self.client.get_user(channel_id)
-                                if user:
-                                    await user.send(embed=embed)
+                        await send_embed_to_all_channels(self.client,
+                                                         self.rssinfo[HORRIBLE720][anime_name]['channels'],
+                                                         embed)
 
         await self.save_rssmanager_data()
         await asyncio.sleep(RSS_SLEEPTIME)
@@ -296,23 +292,20 @@ class RSSManager(Cog):
                                "Use *!addanime* to add it first.")
 
     # Force-delete an entire anime entry, deleting all the channels, the thumbnail, last update time, etc. with it.
+    @check_any(has_permissions(administrator=True), is_owner())
     @command(name='forcedelanime_iamsure', hidden=True)
     async def forcedelanime_iamsure(self, context):
-        if is_bot_admin(context):
-            content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX) + 'forcedelanime_iamsure')\
-                                             .strip()
-            if content.startswith('"') and content.endswith('"'):
-                content = content.strip('" ')
+        content = context.message.content.lstrip(''.join(self.client.BOT_PREFIX) + 'forcedelanime_iamsure').strip()
+        if content.startswith('"') and content.endswith('"'):
+            content = content.strip('" ')
 
-            if content in self.rssinfo[HORRIBLE720].keys():
-                del self.rssinfo[HORRIBLE720][content]
-                await context.send("Anime *{}* has been forcefully deleted from the database by the administrator."
-                                   .format(content))
-                await self.save_rssmanager_data()
-            else:
-                await context.send("Anime name *{}* seems to be invalid.".format(content))
+        if content in self.rssinfo[HORRIBLE720].keys():
+            del self.rssinfo[HORRIBLE720][content]
+            await context.send("Anime *{}* has been forcefully deleted from the database by the administrator."
+                               .format(content))
+            await self.save_rssmanager_data()
         else:
-            await context.send("Only the adminstrator can use the *force delete* function")
+            await context.send("Anime name *{}* seems to be invalid.".format(content))
 
     # Modify the url basis of an anime.
     @check_any(has_permissions(administrator=True), is_owner())

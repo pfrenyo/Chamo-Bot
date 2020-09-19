@@ -79,7 +79,7 @@ class PathfinderRPG(Cog):
     # Save function to keep information about PFRPG between instances
     async def save_data(self):
         with open(PFRPG_DATA_FILE, 'w') as f:
-            json.dump(self.data, f)
+            json.dump(self.data, f, indent=4)
 
     # Load function loading up information about previous instances of PFRPG
     async def load_data(self):

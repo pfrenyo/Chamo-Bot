@@ -63,3 +63,28 @@ async def get_hidden_commands(client, cogs_directory):
                 admin_commands.setdefault(cog_filename, []).append(cmd)
     await client.AppInfo.owner.send(f"Current admin commands available on {client.CURRENT_BOT} are:\n"
                                     f"```{json.dumps(admin_commands, indent=4)}```")
+
+
+async def send_msg_to_all_channels(client, channels, msg):
+    for channel_id in channels:
+        channel = client.get_channel(channel_id)
+        if channel:
+            await channel.send(msg)
+        else:
+            user = client.get_user(channel_id)
+            if user:
+                await user.send(msg)
+
+
+async def send_embed_to_all_channels(client, channels, embed):
+    """
+    We're making 2 functions rather than an extra if in "send_msg_to_all_channels" because it's too ugly.
+    """
+    for channel_id in channels:
+        channel = client.get_channel(channel_id)
+        if channel:
+            await channel.send(embed=embed)
+        else:
+            user = client.get_user(channel_id)
+            if user:
+                await user.send(embed=embed)
