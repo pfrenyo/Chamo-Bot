@@ -61,5 +61,5 @@ async def get_hidden_commands(client, cogs_directory):
                 cmd = cmd.split("async def ")[1]
                 cmd = cmd.split("(self")[0]
                 admin_commands.setdefault(cog_filename, []).append(cmd)
-    await client.owner.send(f"Current admin commands available on {client.CURRENT_BOT} are:\n"
-                            f"```{json.dumps(admin_commands, indent=4)}```")
+    await client.AppInfo.owner.send(f"Current admin commands available on {client.CURRENT_BOT} are:\n"
+                                    f"```{json.dumps(admin_commands, indent=4)}```")

@@ -250,7 +250,7 @@ class RSSManager(Cog):
                                .format(content))
             await self.save_rssmanager_data()
             if not self.rssinfo[HORRIBLE720][content]['channels']:
-                owner = self.client.owner
+                owner = self.client.AppInfo.owner
                 await owner.send("Hello administrator {0.mention}, "
                                  "there seem to be no channels watching *{1}* left.\n".format(owner, content))
         else:

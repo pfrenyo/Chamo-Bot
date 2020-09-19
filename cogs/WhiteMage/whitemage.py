@@ -144,7 +144,7 @@ class WhiteMage(Cog):
         #                       "Soyez gentil avec moi.\n" \
         #                       'PS : Si vous avez des idées d\'améliorations pour ce bot, ' \
         #                       'veuillez les envoyer à mon' \
-        #                       'créateur, {0.mention}.'.format(self.client.owner)
+        #                       'créateur, {0.mention}.'.format(self.client.AppInfo.owner)
 
         # Function removed entirely. May come back later on, but putting it in "on_ready" isn't optimal.
 
@@ -437,7 +437,7 @@ class WhiteMage(Cog):
              hidden=True)
     async def whowrist(self, context):
         # Fetch user object of admin (to allow a DM/PM)
-        owner = self.client.owner
+        owner = self.client.AppInfo.owner
 
         # Note : fetching users and using them (like with user.mention) must be done separately, or else it fails.
         users = [await self.client.fetch_user(userid) for userid in self.wrist]
