@@ -50,7 +50,7 @@ async def send_temporary_msg(context, message, delay=3):
 # @post: void (sends a message with a dictionary of all the hidden commands in every file inside cog_directory)
 async def get_hidden_commands(client, cogs_directory):
     admin_commands = {}
-    for cog_filename in listdir(cogs_directory):
+    for cog_filename in filter(lambda x: "pycache" in x, listdir(cogs_directory)):
         with open(join(cogs_directory, cog_filename)) as f:
             cog_source_code = f.read()
             cog_source_code = cog_source_code.split("hidden=True")
