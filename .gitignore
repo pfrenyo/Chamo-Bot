@@ -3,7 +3,6 @@
 data/keys/*
 data/info/*
 data/skribbl/*
-cogs/FF-Bots/mooch.py
 *__pycache__*
 venv/
 
