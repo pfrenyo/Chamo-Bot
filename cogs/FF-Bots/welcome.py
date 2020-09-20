@@ -52,7 +52,6 @@ class Welcome(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         guild = member.guild
-        print("hello")
 
         # guild.system_channel is the channel indicated as default for new members
         if self.chamo_server_id and int(guild.id) == self.chamo_server_id and guild.system_channel is not None:
