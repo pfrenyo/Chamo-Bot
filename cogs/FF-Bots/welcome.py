@@ -52,6 +52,7 @@ class Welcome(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         guild = member.guild
+        print("hello")
 
         # guild.system_channel is the channel indicated as default for new members
         if self.chamo_server_id and int(guild.id) == self.chamo_server_id and guild.system_channel is not None:
@@ -66,11 +67,10 @@ class Welcome(commands.Cog):
             return
 
         elif self.custom_welcome_messages:
-            for guild_id, message in enumerate(self.custom_welcome_messages):
-                if int(guild.id) == guild_id and guild.system_channel is not None:
+            for guild_id, message in self.custom_welcome_messages.items():
+                if guild.id == int(guild_id) and guild.system_channel is not None:
                     await guild.system_channel.send(content=message.format(member))
                     return
-                    # :flag_jp: :flag_be: {0.mention}君、このサーバーへようこそ！ぜひ楽しんでごじゃる！
 
         if guild.system_channel is not None:
             await guild.system_channel.send(content=DEFAULT_WELCOME_MESSAGE.format(member, guild))
