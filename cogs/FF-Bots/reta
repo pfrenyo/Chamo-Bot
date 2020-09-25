@@ -1,0 +1,47 @@
+# RAJOUTER MESSAGE AU MEC QUI A LANCE LA LISTE: "X a fini d'écrire ses mots!" ou quoi
+
+# dumprssinfo and other shit should be in debug
+# SHADOWVERSE channel block in rss_manager can maybe be displaced?
+
+# self.active_vocabularies = {}  # voc_name -> Vocabulary()
+# self.active_users = {}  # user_id -> voc_name, reverse dictionary from user to vocabulary
+# self.expiration_queue = {}  # ? or smth
+
+
+# class SkribblVocabulary:
+#     def __init__(self, name, initiator):  # , max_words_per_person): -> no, set after
+#         self.name = name
+#         self.initiator = initiator  # user_id
+#         self.max_inputs_per_person = None  # max_words_per_person... let's put MAX = 50
+#         self.expiration_timestamp = time.time()  # + 45 mins
+#         #  self.words = set()  # actually unneeded, will union all user_inputs at the end
+#         self.user_inputs = {}  # key: user_id, value: set of input words (get remaining_inputs with len() and subtract)
+#         # could limit the number of user_inputs to 12 (because 12 players on skribbl) but let's authorize outside players to input words too, even if they don't play. I'll put like max 20 because I don't trust aynthing.
+#
+#     def close_vocabulary(self):  # activates on several occasions: timeout, skribbl_stop of admin.
+#         #  upload list to user and a special channel of my choice! (cimetière des trains)
+#         #  dual language plz
+#         pass
+#
+#     def skribbl_start(self):
+#         pass
+#
+#     def on_message(self):
+#         pass  # if skribbl_starting (no max_words_per_person) and initiator asks then: "how many words per person?" and accept number
+#
+#     def skribbl(self):
+#         # pour entrer dans une liste de voc comme participant : !skribbl tREAtkrelmat. Le bot te propose une liste proche de ton mot si jamais tu t'es trompé (je fais confiance à ce niveau).
+#         pass
+#
+#     def skribbl_stop(self):  # syn: skribbl_exit, can be used by admin to close_vocabulary or by user to just gtfo
+#         # !skribbl_stop (synonym: !skribbl_exit) for a user (not initiator): removes user_id from reverse dictionary (self.active_users), leaves him in self.user_inputs, which gets closed and unioned at the end to make the full vocabulary list
+#         # a way to exit vocabulary to the user as well (either wait for admin to close vocabulary list, or if taken hostage, exist yourslef)
+#         pass
+#
+#     def skribbl_edit(self):
+#         # !skribbl_change old_word, new_word or something
+#         pass
+#
+#     def skribbl_delete(self):
+#         # vocabulary deletion
+#         pass

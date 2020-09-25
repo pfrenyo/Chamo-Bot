@@ -193,7 +193,8 @@ class WhiteMage(Cog):
         # - we send information on how to use Whitemage to the user (on the context channel, not via PM/DM)
         elif message.author != self.client.user \
                 and message.content[0] not in self.client.BOT_PREFIX \
-                and self.client.user.mentioned_in(message):
+                and self.client.user.mentioned_in(message)\
+                and "WhiteMage" in message:
             await message.channel.send(WHITEMAGE_BRIEF)
 
     ###################################################################################################################
